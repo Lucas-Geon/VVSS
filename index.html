@@ -259,6 +259,7 @@
         .click-toggle { cursor: pointer; transition: text-shadow 0.2s, color 0.2s; display: inline-block; user-select: none; }
         .click-toggle:hover { color: #ffeb3b !important; text-shadow: 0 0 12px rgba(255, 235, 59, 0.8); }
 
+        /* 🟢 1초 주기로 3회 깜빡이도록 3s infinite를 3회(1s당 1회)로 적용 */
         @keyframes alarmBlink {
             0% { background-color: rgba(255, 0, 0, 0); border-color: rgba(255, 255, 255, 0.15); }
             50% { background-color: rgba(255, 0, 0, 0.5); border-color: rgba(255, 0, 0, 1); box-shadow: inset 0 0 20px rgba(255,0,0,0.8); }
@@ -860,7 +861,6 @@
             const isSysAbnormal = (state.sys < 90 || state.sys > 160);
             const isHrAbnormal = (state.hr < 50 || state.hr > 120);
             
-            // 🟢 ST Depression (-1.0 이하), ST Elevation (+2.0 이상), T-wave Inversion 감지
             const isStDepAbnormal = (state.st <= -1.0);
             const isStElevAbnormal = (state.st >= 2.0);
             const isTInvAbnormal = Boolean(state.tWaveInverted);
@@ -873,7 +873,6 @@
 
             if (isSysAbnormal && !lastAlarmStatus.sys) triggerManualAlarm(DOM.boxValNBP);
             
-            // ECG 박스 알람 (HR, ST, T-Wave, Rhythm 복합 감지)
             const ecgNeedAlarm = (isHrAbnormal && !lastAlarmStatus.hr) ||
                                  (isStDepAbnormal && !lastAlarmStatus.stDep) ||
                                  (isStElevAbnormal && !lastAlarmStatus.stElev) ||
@@ -1258,13 +1257,15 @@
             syncToFirebase({ volume: state.volume });
         });
 
+        // 🟢 Case B: 마우스 휠 이벤트 시 0~100 범위 밖으로 나가지 않도록 고정 (오버플로우/순환 방지)
         DOM.ctrlVolume.addEventListener('wheel', (e) => {
             e.preventDefault();
-            const direction = e.deltaY < 0 ? 10 : -10;
-            let currentVol = parseInt(DOM.ctrlVolume.value) || 100;
-            let newVol = currentVol + direction;
-            if (newVol < 0) newVol = 0;
-            if (newVol > 100) newVol = 100;
+            const step = 10;
+            const delta = e.deltaY < 0 ? step : -step;
+            let currentVol = parseInt(DOM.ctrlVolume.value) || 0;
+            
+            // 0 미만으로 내려가거나 100 초과로 넘어가지 않도록 clamp
+            let newVol = Math.max(0, Math.min(100, currentVol + delta));
             
             DOM.ctrlVolume.value = String(newVol);
             state.volume = newVol;
@@ -1334,9 +1335,8 @@
 
         let audioCtx; let lastBeepTime = 0; let animationId; 
         let ekgAudioBuffer = null; 
-        let alarmAudioBuffer = null; // 🟢 alarm.mp3 버퍼
+        let alarmAudioBuffer = null; 
 
-        // 🟢 alarm.mp3 파일 로드
         async function loadAlarmSound(url) {
             try {
                 if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -1350,7 +1350,7 @@
             }
         }
 
-        // 🟢 실제 알람음 재생 (alarm.mp3 3회 반복 재생)
+        // 🟢 1초(1000ms) 간격으로 정확히 3회 울리도록 수정
         function triggerManualAlarm(boxElement) {
             if (!boxElement || boxElement.classList.contains('alarm-active')) return; 
             boxElement.classList.add('alarm-active');
@@ -1360,20 +1360,18 @@
                 const volRatio = (state.volume !== undefined ? state.volume : 100) / 100;
 
                 if (alarmAudioBuffer) {
-                    // alarm.mp3 로드 성공 시: 3회 순차 재생
                     for (let i = 0; i < 3; i++) {
                         const source = audioCtx.createBufferSource();
                         source.buffer = alarmAudioBuffer;
                         const gainNode = audioCtx.createGain();
                         source.connect(gainNode);
                         gainNode.connect(audioCtx.destination);
-                        gainNode.gain.setValueAtTime(volRatio * 2.0, now + i * 0.9);
-                        source.start(now + i * 0.9);
+                        gainNode.gain.setValueAtTime(volRatio * 2.0, now + i * 1.0); // 1.0초 간격
+                        source.start(now + i * 1.0);
                     }
                 } else {
-                    // 비상용 알람 전자음
                     for (let i = 0; i < 3; i++) {
-                        const startTime = now + i; 
+                        const startTime = now + i * 1.0; // 1.0초 간격
                         const osc = audioCtx.createOscillator();
                         const gainNode = audioCtx.createGain();
                         osc.type = 'square'; 
