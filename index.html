@@ -259,7 +259,6 @@
         .click-toggle { cursor: pointer; transition: text-shadow 0.2s, color 0.2s; display: inline-block; user-select: none; }
         .click-toggle:hover { color: #ffeb3b !important; text-shadow: 0 0 12px rgba(255, 235, 59, 0.8); }
 
-        /* 🟢 2초 주기로 3회 깜빡이도록 2s ease-in-out 3 적용 */
         @keyframes alarmBlink {
             0% { background-color: rgba(255, 0, 0, 0); border-color: rgba(255, 255, 255, 0.15); }
             50% { background-color: rgba(255, 0, 0, 0.5); border-color: rgba(255, 0, 0, 1); box-shadow: inset 0 0 20px rgba(255,0,0,0.8); }
@@ -269,7 +268,7 @@
         .alarm-trigger { cursor: pointer; }
         #standby-btn { display: none; }
 
-        /* 🟢 컨트롤 패널 (모바일 스크롤 완벽 지원) */
+        /* 🟢 컨트롤 패널 */
         #controls {
             position: absolute; 
             right: 2vw; 
@@ -1097,7 +1096,7 @@
             checkAutoAlarms();
         });
 
-        // 🟢 Worsening Condition (SBP -5, HR +2, EtCO2 -1 / 리미트 적용)
+        // 🟢 Worsening Condition
         DOM.btnWorsen.addEventListener('click', () => {
             applySysChange(parseInt(state.sys) - 5);
             state.hr = Math.max(60, Math.min(120, parseInt(state.hr) + 2));
@@ -1107,7 +1106,7 @@
             checkAutoAlarms();
         });
 
-        // 🟢 Improving Condition (SBP +5, HR -2, EtCO2 +1 / 리미트 적용)
+        // 🟢 Improving Condition
         DOM.btnImprove.addEventListener('click', () => {
             applySysChange(parseInt(state.sys) + 5);
             state.hr = Math.max(60, Math.min(120, parseInt(state.hr) - 2));
@@ -1117,18 +1116,18 @@
             checkAutoAlarms();
         });
 
-        // 🟢 [RC] 시나리오 프리셋
+        // 🟢 [RC] 시나리오 프리셋 (RR 수치 반영)
         function applyRCPreset(presetKey) {
             const presets = {
-                '1-1': { sys: 124, dia: 77, hr: 60, spo2: 99, etco2: 43, bt: 36.2, st: 0.2, rhythm: 'normal', tWaveInverted: false, selfBreathing: false, abpMode: false, dbpSync: false },
-                '1-2': { sys: 117, dia: 72, hr: 62, spo2: 100, etco2: 35, bt: 36.1, st: 0.1, rhythm: 'normal', tWaveInverted: false, selfBreathing: false, abpMode: false, dbpSync: false },
-                '2-1': { sys: 75, dia: 43, hr: 71, spo2: 99, etco2: 30, bt: 36.0, st: 0.1, rhythm: 'normal', tWaveInverted: false, selfBreathing: false, abpMode: false, dbpSync: false },
-                '2-2': { sys: 112, dia: 78, hr: 78, spo2: 100, etco2: 34, bt: 36.0, st: 0.3, rhythm: 'normal', tWaveInverted: false, selfBreathing: false, abpMode: false, dbpSync: false },
-                '3-1': { sys: 81, dia: 41, hr: 75, spo2: state.spo2, etco2: 32, bt: 36.0, st: 0.3, rhythm: 'normal', tWaveInverted: false, selfBreathing: false, abpMode: false, dbpSync: false },
-                '3-2': { sys: 108, dia: 72, hr: 84, spo2: state.spo2, etco2: 34, bt: 36.0, st: 0.3, rhythm: 'normal', tWaveInverted: false, selfBreathing: false, abpMode: false, dbpSync: false },
-                '4-1': { sys: 112, dia: 71, hr: 92, spo2: 96, etco2: 44, bt: 35.9, st: 0.5, rhythm: 'normal', tWaveInverted: false, selfBreathing: false, abpMode: false, dbpSync: false },
-                '4-2': { sys: 132, dia: 81, hr: 96, spo2: 99, etco2: 38, bt: 35.9, st: 0.4, rhythm: 'normal', tWaveInverted: false, selfBreathing: false, abpMode: false, dbpSync: false },
-                '5':   { sys: 152, dia: 91, hr: 84, spo2: 100, etco2: 29, bt: 35.9, st: 0.3, rhythm: 'normal', tWaveInverted: false, selfBreathing: false, abpMode: false, dbpSync: false }
+                '1-1': { sys: 124, dia: 77, hr: 60, spo2: 99, etco2: 43, rr: 10, bt: 36.2, st: 0.2, rhythm: 'normal', tWaveInverted: false, selfBreathing: false, abpMode: false, dbpSync: false },
+                '1-2': { sys: 117, dia: 72, hr: 62, spo2: 100, etco2: 35, rr: 13, bt: 36.1, st: 0.1, rhythm: 'normal', tWaveInverted: false, selfBreathing: false, abpMode: false, dbpSync: false },
+                '2-1': { sys: 75, dia: 43, hr: 71, spo2: 99, etco2: 30, rr: 13, bt: 36.0, st: 0.1, rhythm: 'normal', tWaveInverted: false, selfBreathing: false, abpMode: false, dbpSync: false },
+                '2-2': { sys: 112, dia: 78, hr: 78, spo2: 100, etco2: 34, rr: 11, bt: 36.0, st: 0.3, rhythm: 'normal', tWaveInverted: false, selfBreathing: false, abpMode: false, dbpSync: false },
+                '3-1': { sys: 81, dia: 41, hr: 75, spo2: state.spo2, etco2: 32, rr: 11, bt: 36.0, st: 0.3, rhythm: 'normal', tWaveInverted: false, selfBreathing: false, abpMode: false, dbpSync: false },
+                '3-2': { sys: 108, dia: 72, hr: 84, spo2: state.spo2, etco2: 34, rr: 10, bt: 36.0, st: 0.3, rhythm: 'normal', tWaveInverted: false, selfBreathing: false, abpMode: false, dbpSync: false },
+                '4-1': { sys: 112, dia: 71, hr: 92, spo2: 96, etco2: 44, rr: 10, bt: 35.9, st: 0.5, rhythm: 'normal', tWaveInverted: false, selfBreathing: false, abpMode: false, dbpSync: false },
+                '4-2': { sys: 132, dia: 81, hr: 96, spo2: 99, etco2: 38, rr: 14, bt: 35.9, st: 0.4, rhythm: 'normal', tWaveInverted: false, selfBreathing: false, abpMode: false, dbpSync: false },
+                '5':   { sys: 152, dia: 91, hr: 84, spo2: 100, etco2: 29, rr: 14, bt: 35.9, st: 0.3, rhythm: 'normal', tWaveInverted: false, selfBreathing: false, abpMode: false, dbpSync: false }
             };
 
             const selected = presets[String(presetKey)];
