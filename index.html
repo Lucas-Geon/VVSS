@@ -259,7 +259,6 @@
         .click-toggle { cursor: pointer; transition: text-shadow 0.2s, color 0.2s; display: inline-block; user-select: none; }
         .click-toggle:hover { color: #ffeb3b !important; text-shadow: 0 0 12px rgba(255, 235, 59, 0.8); }
 
-        /* 🟢 2초 주기로 3회 깜빡임 */
         @keyframes alarmBlink {
             0% { background-color: rgba(255, 0, 0, 0); border-color: rgba(255, 255, 255, 0.15); }
             50% { background-color: rgba(255, 0, 0, 0.5); border-color: rgba(255, 0, 0, 1); box-shadow: inset 0 0 20px rgba(255,0,0,0.8); }
@@ -599,7 +598,7 @@
                             <input type="range" id="ctrl-dia" min="20" max="180" value="80" tabindex="-1">
                             <button class="step-btn plus" data-target="ctrl-dia" data-step="5">+</button>
                         </div>
-                        <!-- 🟢 DBP Sync 옵션 (기본 체크 적용) -->
+                        <!-- 🟢 DBP Sync 옵션 -->
                         <label style="font-size: 9px; color: #aaa; display: flex; align-items: center; margin-top: 1px;">
                             <input type="checkbox" id="ctrl-dbp-sync" style="margin-right: 3px; cursor: pointer;" checked> DBP sync
                         </label>
@@ -801,7 +800,6 @@
         let sessionId = urlParams.get('session');
         let role = urlParams.get('role');
 
-        // 🟢 기본값으로 dbpSync를 true로 설정
         let state = {
             bt: 36.0, hr: 60, spo2: 100, etco2: 35, rr: 10,
             sys: 120, dia: 80, st: 0.0, tWaveInverted: false, abpMode: false,
@@ -966,10 +964,15 @@
                         DOM.labelNBPTitle.innerText = "NBP mmHg (2.5mins)";
                     }
 
+                    // 🟢 모니터 원격 On/Off(Stand by) 동기화 확실히 보장
                     if (state.monitorStatus === 'running') {
-                        if (currentMonitorStatus !== 'running') startMonitorLocal();
+                        if (currentMonitorStatus !== 'running') {
+                            startMonitorLocal();
+                        }
                     } else {
-                        if (currentMonitorStatus !== 'standby') standbyMonitorLocal();
+                        if (currentMonitorStatus !== 'standby') {
+                            standbyMonitorLocal();
+                        }
                     }
 
                     checkAutoAlarms();
@@ -1274,6 +1277,7 @@
             checkAutoAlarms();
         });
 
+        // 🟢 패널 상단 Start 버튼
         DOM.btnPanelStart.addEventListener('click', (e) => {
             e.stopPropagation();
             state.monitorStatus = 'running';
@@ -1281,12 +1285,13 @@
             startMonitorLocal();
         });
 
-        DOM.btnPanelStandby.addEventListener('click', () => {
+        // 🟢 패널 상단 Stand by 버튼 (확실하게 Firebase 푸시)
+        DOM.btnPanelStandby.addEventListener('click', (e) => {
             e.stopPropagation();
             state = {
                 bt: 36.0, hr: 60, spo2: 100, etco2: 35, rr: 10,
                 sys: 120, dia: 80, st: 0.0, tWaveInverted: false, abpMode: false,
-                selfBreathing: false, rhythm: 'normal', dbpSync: true, // 🟢 스탠바이 초기화 시에도 기본값 true
+                selfBreathing: false, rhythm: 'normal', dbpSync: true,
                 isMuted: false, volume: 100, monitorStatus: 'standby'
             };
             syncToFirebase(state);
@@ -1547,7 +1552,7 @@
             state = {
                 bt: 36.0, hr: 60, spo2: 100, etco2: 35, rr: 10,
                 sys: 120, dia: 80, st: 0.0, tWaveInverted: false, abpMode: false,
-                selfBreathing: false, rhythm: 'normal', dbpSync: true, // 🟢 스탠바이 초기화 시에도 기본값 true
+                selfBreathing: false, rhythm: 'normal', dbpSync: true,
                 isMuted: false, volume: 100, monitorStatus: 'standby'
             };
             syncToFirebase(state);
