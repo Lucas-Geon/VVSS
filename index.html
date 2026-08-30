@@ -259,71 +259,79 @@
         .click-toggle { cursor: pointer; transition: text-shadow 0.2s, color 0.2s; display: inline-block; user-select: none; }
         .click-toggle:hover { color: #ffeb3b !important; text-shadow: 0 0 12px rgba(255, 235, 59, 0.8); }
 
-        /* 🟢 1초 주기로 3회 깜빡이도록 3s infinite를 3회(1s당 1회)로 적용 */
+        /* 🟢 2초 주기로 3회 깜빡이도록 2s ease-in-out 3 적용 */
         @keyframes alarmBlink {
             0% { background-color: rgba(255, 0, 0, 0); border-color: rgba(255, 255, 255, 0.15); }
             50% { background-color: rgba(255, 0, 0, 0.5); border-color: rgba(255, 0, 0, 1); box-shadow: inset 0 0 20px rgba(255,0,0,0.8); }
             100% { background-color: rgba(255, 0, 0, 0); border-color: rgba(255, 255, 255, 0.15); }
         }
-        .alarm-active { animation: alarmBlink 1s ease-in-out 3; }
+        .alarm-active { animation: alarmBlink 2s ease-in-out 3; }
         .alarm-trigger { cursor: pointer; }
         #standby-btn { display: none; }
 
-        /* 🟢 컨트롤 패널 */
+        /* 🟢 컨트롤 패널 (모바일 스크롤 완벽 지원) */
         #controls {
             position: absolute; 
             right: 2vw; 
             top: 3vh;
-            width: 450px; 
+            width: 440px; 
             min-width: 220px;
             max-width: 650px;
             background-color: #2a2a2a;
-            padding: 12px 16px;
+            padding: 10px 12px;
             border-radius: 15px;
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 6px;
             box-shadow: 10px 0 30px rgba(0,0,0,0.5);
             box-sizing: border-box;
             max-height: 94vh;
-            overflow-y: auto; 
+            overflow-y: scroll !important; 
+            overflow-x: hidden !important;
+            -webkit-overflow-scrolling: touch;
             z-index: 15;
-            touch-action: none;
+            touch-action: pan-y !important;
             container-type: inline-size;
         }
 
         .controls-layout {
             display: grid;
             grid-template-columns: 1fr;
-            gap: 8px;
+            gap: 6px;
             width: 100%;
+            box-sizing: border-box;
         }
 
         .controls-col {
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 6px;
+            width: 100%;
+            min-width: 0;
         }
 
-        @container (min-width: 310px) {
+        @container (min-width: 360px) {
             .controls-layout {
                 grid-template-columns: 1fr 1fr;
-                gap: 16px;
+                gap: 12px;
             }
         }
 
-        .control-group { display: flex; flex-direction: column; width: 100%; gap: 1px; }
+        .control-group { display: flex; flex-direction: column; width: 100%; gap: 1px; min-width: 0; }
         .input-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px; }
-        .input-row label { font-size: 11px; margin: 0; font-weight: 500; }
+        .input-row label { font-size: 11px; margin: 0; font-weight: 500; white-space: nowrap; }
 
         .slider-row {
             display: flex;
             align-items: center;
-            gap: 5px;
-            margin: 1px 0 4px 0;
+            gap: 4px;
+            margin: 1px 0 3px 0;
+            width: 100%;
+            box-sizing: border-box;
         }
         .slider-row input[type="range"] {
             flex: 1;
+            min-width: 0;
             margin: 0;
             cursor: pointer;
         }
@@ -332,9 +340,9 @@
             color: #fff;
             border: none;
             border-radius: 4px;
-            width: 22px;
-            height: 22px;
-            font-size: 14px;
+            width: 20px;
+            height: 20px;
+            font-size: 13px;
             font-weight: bold;
             line-height: 1;
             cursor: pointer;
@@ -342,6 +350,7 @@
             align-items: center;
             justify-content: center;
             padding: 0;
+            flex-shrink: 0;
             user-select: none;
         }
         .step-btn:hover { background: #666; }
@@ -349,8 +358,9 @@
 
         input[type="number"] {
             background-color: #111; color: #fff; border: 1px solid #555;
-            padding: 2px; border-radius: 4px; width: 44px;
+            padding: 2px; border-radius: 4px; width: 40px;
             text-align: center; font-weight: bold; font-size: 11px;
+            flex-shrink: 0;
         }
 
         input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-inner-spin-button {
@@ -361,9 +371,9 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-top: 4px;
+            margin-top: 2px;
             margin-bottom: 2px;
-            gap: 6px;
+            gap: 4px;
             flex-wrap: wrap;
         }
 
@@ -379,13 +389,13 @@
         .condition-btn-group {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 8px;
-            margin-top: 4px;
-            margin-bottom: 4px;
+            gap: 6px;
+            margin-top: 2px;
+            margin-bottom: 2px;
         }
 
         .btn-cond {
-            padding: 8px 4px;
+            padding: 6px 4px;
             border-radius: 6px;
             border: 1px solid rgba(255,255,255,0.2);
             cursor: pointer;
@@ -395,7 +405,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 3px;
+            gap: 2px;
         }
 
         .btn-cond-title { font-size: 11px; font-weight: bold; }
@@ -407,24 +417,25 @@
         .btn-improve { background-color: #005f73; color: #cceeff; }
         .btn-improve:hover { background-color: #0a9396; color: #ffffff; }
 
-        .thra-section {
-            margin-top: 6px; padding-top: 6px; border-top: 1px dashed #555;
-            display: flex; flex-direction: column; gap: 5px;
+        /* 🟢 시나리오 섹션 스타일 */
+        .scenario-section {
+            margin-top: 4px; padding-top: 4px; border-top: 1px dashed #555;
+            display: flex; flex-direction: column; gap: 4px;
         }
-        .thra-header { font-size: 12px; font-weight: bold; color: #ffeb3b; text-align: center; letter-spacing: 1px; }
-        .thra-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; }
+        .scenario-header { font-size: 12px; font-weight: bold; color: #ffeb3b; text-align: center; letter-spacing: 1px; }
+        .scenario-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; }
 
-        .btn-thra {
+        .btn-scenario {
             background-color: #333333; color: #e0e0e0; border: 1px solid #555;
             border-radius: 4px; padding: 5px 2px; font-size: 10px; font-weight: bold;
             cursor: pointer; transition: all 0.15s ease; text-align: center; white-space: nowrap;
         }
-        .btn-thra:hover { background-color: #4a4a4a; color: #ffffff; border-color: #ffeb3b; box-shadow: 0 0 6px rgba(255, 235, 59, 0.4); }
-        .btn-thra:active { transform: scale(0.96); }
+        .btn-scenario:hover { background-color: #4a4a4a; color: #ffffff; border-color: #ffeb3b; box-shadow: 0 0 6px rgba(255, 235, 59, 0.4); }
+        .btn-scenario:active { transform: scale(0.96); }
 
         #apply-btn {
-            margin-top: 2px; padding: 8px; font-size: 14px; background-color: #28a745; 
-            color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;
+            margin-top: 2px; padding: 8px; font-size: 13px; background-color: #28a745; 
+            color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold;
             width: 100%; transition: 0.2s;
         }
         #apply-btn:hover { background-color: #218838; }
@@ -544,9 +555,9 @@
     <!-- 🟢 컨트롤 패널 -->
     <div id="controls">
         <div class="panel-header" id="controls-header" title="패널 헤더를 잡고 이동">
-            <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap; flex: 1;">
-                <div class="panel-title">Control Panel</div>
-                <div id="connection-status" style="font-size: 11px; font-weight: bold; color: #ff0000; padding: 2px 4px; border-radius: 4px; background: rgba(0,0,0,0.3);">Disconnected</div>
+            <div style="display: flex; align-items: center; gap: 4px; flex-wrap: wrap; flex: 1; min-width: 0;">
+                <div class="panel-title" style="font-size: 14px;">Control Panel</div>
+                <div id="connection-status" style="font-size: 10px; font-weight: bold; color: #ff0000; padding: 2px 4px; border-radius: 4px; background: rgba(0,0,0,0.3);">Disconnected</div>
                 <!-- 🟢 상단 Start / Standby / Mute / Volume 버튼들 -->
                 <button id="btn-panel-start" class="panel-top-btn" style="background:#28a745; color:#fff;">Start</button>
                 <button id="btn-panel-standby" class="panel-top-btn" style="background:#ffc107; color:#000;">Stand by</button>
@@ -569,7 +580,7 @@
         </div>
         <div id="controls-resizer" class="resizer-handle" title="크기 조절"></div>
         
-        <div id="controls-body" style="display: flex; flex-direction: column; gap: 8px;">
+        <div id="controls-body" style="display: flex; flex-direction: column; gap: 6px; padding-bottom: 15px;">
             <div class="controls-layout">
                 <!-- ⬅️ 좌측 그룹 -->
                 <div class="controls-col">
@@ -596,7 +607,7 @@
                             <button class="step-btn plus" data-target="ctrl-dia" data-step="5">+</button>
                         </div>
                         <!-- 🟢 DBP Sync 옵션 -->
-                        <label style="font-size: 10px; color: #aaa; display: flex; align-items: center; margin-top: 2px;">
+                        <label style="font-size: 10px; color: #aaa; display: flex; align-items: center; margin-top: 1px;">
                             <input type="checkbox" id="ctrl-dbp-sync" style="margin-right: 4px; cursor: pointer;"> DBP sync
                         </label>
                     </div>
@@ -678,10 +689,10 @@
                 </div>
                 
                 <!-- ⚡ ECG 리듬 선택 -->
-                <div class="control-group" style="grid-column: 1 / -1; margin-top: 2px;">
+                <div class="control-group" style="grid-column: 1 / -1; margin-top: 1px;">
                     <div class="input-row">
-                        <label class="ecg-color" style="font-size:12px; font-weight:bold;">ECG Rhythm:</label>
-                        <select id="ctrl-rhythm" style="background:#111; color:#00ff00; border:1px solid #555; padding:4px 6px; border-radius:4px; width:70%; font-weight:bold; cursor:pointer;">
+                        <label class="ecg-color" style="font-size:11px; font-weight:bold;">ECG Rhythm:</label>
+                        <select id="ctrl-rhythm" style="background:#111; color:#00ff00; border:1px solid #555; padding:3px 6px; border-radius:4px; width:68%; font-weight:bold; cursor:pointer;">
                             <option value="normal">Normal Sinus</option>
                             <option value="pvc">Occasional PVC</option>
                             <option value="bigeminy">Bigeminy PVC</option>
@@ -697,15 +708,15 @@
             
             <div class="mode-row">
                 <label class="ecg-color">
-                    <input type="checkbox" id="ctrl-twave" style="width: auto; margin: 0 5px 0 0; cursor: pointer;" tabindex="9">
+                    <input type="checkbox" id="ctrl-twave" style="width: auto; margin: 0 4px 0 0; cursor: pointer;" tabindex="9">
                     T-Wave Inv
                 </label>
                 <label style="color: #ff0000;">
-                    <input type="checkbox" id="ctrl-abp" style="width: auto; margin: 0 5px 0 0; cursor: pointer;" tabindex="10">
+                    <input type="checkbox" id="ctrl-abp" style="width: auto; margin: 0 4px 0 0; cursor: pointer;" tabindex="10">
                     ABP
                 </label>
                 <label class="etco2-color">
-                    <input type="checkbox" id="ctrl-self-breathing" style="width: auto; margin: 0 5px 0 0; cursor: pointer;" tabindex="11">
+                    <input type="checkbox" id="ctrl-self-breathing" style="width: auto; margin: 0 4px 0 0; cursor: pointer;" tabindex="11">
                     Self Breathing
                 </label>
             </div>
@@ -714,28 +725,44 @@
             <div class="condition-btn-group">
                 <button type="button" class="btn-cond btn-worsen" id="btn-worsen">
                     <span class="btn-cond-title">Worsening condition</span>
-                    <span class="btn-cond-desc">(SBP -5, DBP -4, HR +3, EtCO2 -1)</span>
+                    <span class="btn-cond-desc">(SBP -5, HR +2, EtCO2 -1)</span>
                 </button>
                 <button type="button" class="btn-cond btn-improve" id="btn-improve">
                     <span class="btn-cond-title">Improving condition</span>
-                    <span class="btn-cond-desc">(SBP +5, DBP +4, HR -3, EtCO2 +1)</span>
+                    <span class="btn-cond-desc">(SBP +5, HR -2, EtCO2 +1)</span>
                 </button>
             </div>
 
-            <!-- 🟢 THRA 시나리오 원클릭 프리셋 버튼 영역 (#1-1, #1-2, #2~#9) -->
-            <div class="thra-section">
-                <div class="thra-header">[THRA]</div>
-                <div class="thra-grid">
-                    <button type="button" class="btn-thra" onclick="applyTHRAPreset('1-1')">#1-1</button>
-                    <button type="button" class="btn-thra" onclick="applyTHRAPreset('1-2')">#1-2</button>
-                    <button type="button" class="btn-thra" onclick="applyTHRAPreset('2')">#2</button>
-                    <button type="button" class="btn-thra" onclick="applyTHRAPreset('3')">#3</button>
-                    <button type="button" class="btn-thra" onclick="applyTHRAPreset('4')">#4</button>
-                    <button type="button" class="btn-thra" onclick="applyTHRAPreset('5')">#5</button>
-                    <button type="button" class="btn-thra" onclick="applyTHRAPreset('6')">#6</button>
-                    <button type="button" class="btn-thra" onclick="applyTHRAPreset('7')">#7</button>
-                    <button type="button" class="btn-thra" onclick="applyTHRAPreset('8')">#8</button>
-                    <button type="button" class="btn-thra" onclick="applyTHRAPreset('9')">#9</button>
+            <!-- 🟢 [RC] 시나리오 원클릭 프리셋 영역 -->
+            <div class="scenario-section">
+                <div class="scenario-header">[RC]</div>
+                <div class="scenario-grid">
+                    <button type="button" class="btn-scenario" onclick="applyRCPreset('1-1')">#1-1</button>
+                    <button type="button" class="btn-scenario" onclick="applyRCPreset('1-2')">#1-2</button>
+                    <button type="button" class="btn-scenario" onclick="applyRCPreset('2-1')">#2-1</button>
+                    <button type="button" class="btn-scenario" onclick="applyRCPreset('2-2')">#2-2</button>
+                    <button type="button" class="btn-scenario" onclick="applyRCPreset('3-1')">#3-1</button>
+                    <button type="button" class="btn-scenario" onclick="applyRCPreset('3-2')">#3-2</button>
+                    <button type="button" class="btn-scenario" onclick="applyRCPreset('4-1')">#4-1</button>
+                    <button type="button" class="btn-scenario" onclick="applyRCPreset('4-2')">#4-2</button>
+                    <button type="button" class="btn-scenario" onclick="applyRCPreset('5')">#5</button>
+                </div>
+            </div>
+
+            <!-- 🟢 [THRA] 시나리오 원클릭 프리셋 영역 -->
+            <div class="scenario-section">
+                <div class="scenario-header">[THRA]</div>
+                <div class="scenario-grid">
+                    <button type="button" class="btn-scenario" onclick="applyTHRAPreset('1-1')">#1-1</button>
+                    <button type="button" class="btn-scenario" onclick="applyTHRAPreset('1-2')">#1-2</button>
+                    <button type="button" class="btn-scenario" onclick="applyTHRAPreset('2')">#2</button>
+                    <button type="button" class="btn-scenario" onclick="applyTHRAPreset('3')">#3</button>
+                    <button type="button" class="btn-scenario" onclick="applyTHRAPreset('4')">#4</button>
+                    <button type="button" class="btn-scenario" onclick="applyTHRAPreset('5')">#5</button>
+                    <button type="button" class="btn-scenario" onclick="applyTHRAPreset('6')">#6</button>
+                    <button type="button" class="btn-scenario" onclick="applyTHRAPreset('7')">#7</button>
+                    <button type="button" class="btn-scenario" onclick="applyTHRAPreset('8')">#8</button>
+                    <button type="button" class="btn-scenario" onclick="applyTHRAPreset('9')">#9</button>
                 </div>
             </div>
 
@@ -788,7 +815,6 @@
             isMuted: false, volume: 100, monitorStatus: 'standby'
         };
 
-        // 🟢 이전 정상 여부 추적 상태 (알람 1회 3번 깜빡임 트리거용)
         let lastAlarmStatus = {
             sys: false, hr: false, stDep: false, stElev: false, tInv: false,
             spo2: false, etco2: false, rr: false, bt: false, rhythm: false
@@ -860,7 +886,6 @@
 
             const isSysAbnormal = (state.sys < 90 || state.sys > 160);
             const isHrAbnormal = (state.hr < 50 || state.hr > 120);
-            
             const isStDepAbnormal = (state.st <= -1.0);
             const isStElevAbnormal = (state.st >= 2.0);
             const isTInvAbnormal = Boolean(state.tWaveInverted);
@@ -947,7 +972,6 @@
                         DOM.labelNBPTitle.innerText = "NBP mmHg (2.5mins)";
                     }
 
-                    // 🟢 모니터 원격 On/Off(Stand by) 동기화
                     if (state.monitorStatus === 'running') {
                         if (currentMonitorStatus !== 'running') startMonitorLocal();
                     } else {
@@ -993,6 +1017,9 @@
             ctrl.style.borderRadius = '0';
             ctrl.style.zIndex = '9999';
             ctrl.style.backgroundColor = '#1a1a1a';
+            ctrl.style.padding = '8px 10px';
+            ctrl.style.overflowY = 'scroll';
+            ctrl.style.touchAction = 'pan-y';
             document.getElementById('controls-resizer').style.display = 'none';
             document.getElementById('ctrl-min-btn').style.display = 'none';
         }
@@ -1030,7 +1057,6 @@
             DOM.ctrlRR.value = state.rr; DOM.ctrlSys.value = state.sys;
             DOM.ctrlDia.value = state.dia; DOM.ctrlST.value = state.st;
 
-            // 🟢 음소거 메시지 표시 및 컨트롤러 버튼 스타일 동기화
             if (muteMsg) muteMsg.style.display = state.isMuted ? 'block' : 'none';
             if (state.isMuted) {
                 DOM.btnPanelMute.style.background = '#dc3545';
@@ -1071,26 +1097,54 @@
             checkAutoAlarms();
         });
 
+        // 🟢 Worsening Condition (SBP -5, HR +2, EtCO2 -1 / 리미트 적용)
         DOM.btnWorsen.addEventListener('click', () => {
             applySysChange(parseInt(state.sys) - 5);
-            if (!state.dbpSync) state.dia = Math.max(20, Math.min(180, parseInt(state.dia) - 4));
-            state.hr = Math.max(30, Math.min(200, parseInt(state.hr) + 3));
-            state.etco2 = Math.max(10, Math.min(80, parseInt(state.etco2) - 1));
+            state.hr = Math.max(60, Math.min(120, parseInt(state.hr) + 2));
+            state.etco2 = Math.max(28, Math.min(38, parseInt(state.etco2) - 1));
             updateDisplay();
             syncToFirebase({ sys: state.sys, dia: state.dia, hr: state.hr, etco2: state.etco2 });
             checkAutoAlarms();
         });
 
+        // 🟢 Improving Condition (SBP +5, HR -2, EtCO2 +1 / 리미트 적용)
         DOM.btnImprove.addEventListener('click', () => {
             applySysChange(parseInt(state.sys) + 5);
-            if (!state.dbpSync) state.dia = Math.max(20, Math.min(180, parseInt(state.dia) + 4));
-            state.hr = Math.max(30, Math.min(200, parseInt(state.hr) - 3));
-            state.etco2 = Math.max(10, Math.min(80, parseInt(state.etco2) + 1));
+            state.hr = Math.max(60, Math.min(120, parseInt(state.hr) - 2));
+            state.etco2 = Math.max(28, Math.min(38, parseInt(state.etco2) + 1));
             updateDisplay();
             syncToFirebase({ sys: state.sys, dia: state.dia, hr: state.hr, etco2: state.etco2 });
             checkAutoAlarms();
         });
 
+        // 🟢 [RC] 시나리오 프리셋
+        function applyRCPreset(presetKey) {
+            const presets = {
+                '1-1': { sys: 124, dia: 77, hr: 60, spo2: 99, etco2: 43, bt: 36.2, st: 0.2, rhythm: 'normal', tWaveInverted: false, selfBreathing: false, abpMode: false, dbpSync: false },
+                '1-2': { sys: 117, dia: 72, hr: 62, spo2: 100, etco2: 35, bt: 36.1, st: 0.1, rhythm: 'normal', tWaveInverted: false, selfBreathing: false, abpMode: false, dbpSync: false },
+                '2-1': { sys: 75, dia: 43, hr: 71, spo2: 99, etco2: 30, bt: 36.0, st: 0.1, rhythm: 'normal', tWaveInverted: false, selfBreathing: false, abpMode: false, dbpSync: false },
+                '2-2': { sys: 112, dia: 78, hr: 78, spo2: 100, etco2: 34, bt: 36.0, st: 0.3, rhythm: 'normal', tWaveInverted: false, selfBreathing: false, abpMode: false, dbpSync: false },
+                '3-1': { sys: 81, dia: 41, hr: 75, spo2: state.spo2, etco2: 32, bt: 36.0, st: 0.3, rhythm: 'normal', tWaveInverted: false, selfBreathing: false, abpMode: false, dbpSync: false },
+                '3-2': { sys: 108, dia: 72, hr: 84, spo2: state.spo2, etco2: 34, bt: 36.0, st: 0.3, rhythm: 'normal', tWaveInverted: false, selfBreathing: false, abpMode: false, dbpSync: false },
+                '4-1': { sys: 112, dia: 71, hr: 92, spo2: 96, etco2: 44, bt: 35.9, st: 0.5, rhythm: 'normal', tWaveInverted: false, selfBreathing: false, abpMode: false, dbpSync: false },
+                '4-2': { sys: 132, dia: 81, hr: 96, spo2: 99, etco2: 38, bt: 35.9, st: 0.4, rhythm: 'normal', tWaveInverted: false, selfBreathing: false, abpMode: false, dbpSync: false },
+                '5':   { sys: 152, dia: 91, hr: 84, spo2: 100, etco2: 29, bt: 35.9, st: 0.3, rhythm: 'normal', tWaveInverted: false, selfBreathing: false, abpMode: false, dbpSync: false }
+            };
+
+            const selected = presets[String(presetKey)];
+            if (selected) {
+                Object.assign(state, selected);
+                DOM.ctrlSelfBreathing.checked = state.selfBreathing;
+                DOM.ctrlDbpSync.checked = state.dbpSync;
+                DOM.ctrlTWave.checked = state.tWaveInverted;
+                toggleABPMode(state.abpMode);
+                updateDisplay();
+                syncToFirebase(state);
+                checkAutoAlarms();
+            }
+        }
+
+        // 🟢 [THRA] 시나리오 프리셋
         function applyTHRAPreset(presetKey) {
             const presets = {
                 '1-1': { sys: 204, dia: 172, hr: 73, spo2: 94, rr: 15, bt: 36.2, st: 0.2, etco2: 23, selfBreathing: true, abpMode: false, dbpSync: false, rhythm: 'normal', tWaveInverted: false },
@@ -1225,7 +1279,6 @@
             checkAutoAlarms();
         });
 
-        // 🟢 패널 상단 버튼 로직 (Start, Stand by, Mute, Volume)
         DOM.btnPanelStart.addEventListener('click', (e) => {
             e.stopPropagation();
             state.monitorStatus = 'running';
@@ -1257,14 +1310,11 @@
             syncToFirebase({ volume: state.volume });
         });
 
-        // 🟢 Case B: 마우스 휠 이벤트 시 0~100 범위 밖으로 나가지 않도록 고정 (오버플로우/순환 방지)
         DOM.ctrlVolume.addEventListener('wheel', (e) => {
             e.preventDefault();
             const step = 10;
             const delta = e.deltaY < 0 ? step : -step;
             let currentVol = parseInt(DOM.ctrlVolume.value) || 0;
-            
-            // 0 미만으로 내려가거나 100 초과로 넘어가지 않도록 clamp
             let newVol = Math.max(0, Math.min(100, currentVol + delta));
             
             DOM.ctrlVolume.value = String(newVol);
@@ -1350,7 +1400,6 @@
             }
         }
 
-        // 🟢 1초(1000ms) 간격으로 정확히 3회 울리도록 수정
         function triggerManualAlarm(boxElement) {
             if (!boxElement || boxElement.classList.contains('alarm-active')) return; 
             boxElement.classList.add('alarm-active');
@@ -1366,12 +1415,12 @@
                         const gainNode = audioCtx.createGain();
                         source.connect(gainNode);
                         gainNode.connect(audioCtx.destination);
-                        gainNode.gain.setValueAtTime(volRatio * 2.0, now + i * 1.0); // 1.0초 간격
-                        source.start(now + i * 1.0);
+                        gainNode.gain.setValueAtTime(volRatio * 2.0, now + i * 2.0);
+                        source.start(now + i * 2.0);
                     }
                 } else {
                     for (let i = 0; i < 3; i++) {
-                        const startTime = now + i * 1.0; // 1.0초 간격
+                        const startTime = now + i * 2.0;
                         const osc = audioCtx.createOscillator();
                         const gainNode = audioCtx.createGain();
                         osc.type = 'square'; 
@@ -1385,7 +1434,7 @@
                     }
                 }
             }
-            setTimeout(() => { boxElement.classList.remove('alarm-active'); }, 3000);
+            setTimeout(() => { boxElement.classList.remove('alarm-active'); }, 6000);
         }
 
         document.querySelectorAll('.alarm-trigger').forEach(box => {
