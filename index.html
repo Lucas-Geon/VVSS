@@ -91,7 +91,7 @@
             left: 18%; 
             width: 6%;     
             height: 8%;    
-            border-radius: 50%;
+            border-radius: 50%; 
             cursor: pointer; 
             z-index: 200;
         }
@@ -499,7 +499,7 @@
             
             <!-- 수치 영역 -->
             <div id="values">
-                <div class="val-box ecg-color alarm-trigger">
+                <div class="val-box ecg-color alarm-trigger" id="box-val-hr">
                     <div class="val-title">HR (bpm)</div>
                     <div class="val-number scroll-val" id="val-hr" title="휠 조절">60</div>
                     <div class="st-text">
@@ -508,12 +508,12 @@
                     </div>
                 </div>
 
-                <div class="val-box spo2-color alarm-trigger">
+                <div class="val-box spo2-color alarm-trigger" id="box-val-spo2">
                     <div class="val-title">SpO2 (%)</div>
                     <div class="val-number scroll-val" id="val-spo2" title="휠 조절">100</div>
                 </div>
 
-                <div class="val-box etco2-color alarm-trigger">
+                <div class="val-box etco2-color alarm-trigger" id="box-val-etco2">
                     <div class="val-title">EtCO2</div>
                     <div class="val-number scroll-val" id="val-etco2" title="휠 조절">35</div>
                 </div>
@@ -523,7 +523,7 @@
                     <div class="val-number scroll-val" id="val-rr" title="휠 조절">10</div>
                 </div>
 
-                <div class="val-box bt-color alarm-trigger">
+                <div class="val-box bt-color alarm-trigger" id="box-val-bt">
                     <div class="val-title">BT (℃)</div>
                     <div class="val-number scroll-val" id="val-bt" title="휠 조절">36.0</div>
                 </div>
@@ -550,7 +550,7 @@
                 <button id="btn-panel-start" class="panel-top-btn" style="background:#28a745; color:#fff;">Start</button>
                 <button id="btn-panel-standby" class="panel-top-btn" style="background:#ffc107; color:#000;">Stand by</button>
                 <button id="btn-panel-mute" class="panel-top-btn" style="background:#6c757d; color:#fff;">Mute</button>
-                <select id="ctrl-volume" class="panel-top-btn" style="background:#111; color:#fff; border:1px solid #555; outline:none;">
+                <select id="ctrl-volume" class="panel-top-btn" style="background:#111; color:#fff; border:1px solid #555; outline:none;" title="마우스 휠로 조절 가능">
                     <option value="100">Vol: 100%</option>
                     <option value="90">Vol: 90%</option>
                     <option value="80">Vol: 80%</option>
@@ -784,7 +784,12 @@
             bt: 36.0, hr: 60, spo2: 100, etco2: 35, rr: 10,
             sys: 120, dia: 80, st: 0.0, tWaveInverted: false, abpMode: false,
             selfBreathing: false, rhythm: 'normal', dbpSync: false,
-            isMuted: false, volume: 100, monitorStatus: 'standby' // 🟢 상태 추가
+            isMuted: false, volume: 100, monitorStatus: 'standby'
+        };
+
+        // 🟢 이전 정상 여부 추적 상태 (알람 1회 3번 깜빡임 트리거용 - EtCO2 추가)
+        let lastAlarmStatus = {
+            sys: false, hr: false, st: false, spo2: false, etco2: false, rr: false, bt: false, rhythm: false
         };
 
         const DOM = {
@@ -793,8 +798,15 @@
             valRR: document.getElementById('val-rr'), valSys: document.getElementById('val-sys'),
             valDia: document.getElementById('val-dia'), valST: document.getElementById('val-st'),
             
+            boxValHR: document.getElementById('box-val-hr'),
+            boxValSpO2: document.getElementById('box-val-spo2'),
+            boxValEtCO2: document.getElementById('box-val-etco2'),
+            boxValRR: document.getElementById('box-val-rr'),
+            boxValBT: document.getElementById('box-val-bt'),
+            boxValNBP: document.getElementById('nbp-box-container'),
+
             labelWaveRR: document.getElementById('label-wave-rr'), labelNBPTitle: document.getElementById('label-nbp-title'),
-            labelValRR: document.getElementById('label-val-rr'), boxValRR: document.getElementById('box-val-rr'),
+            labelValRR: document.getElementById('label-val-rr'),
             rhythmLabel: document.getElementById('rhythm-label'), sessionDisplay: document.getElementById('session-display'),
             
             ctrlBT: document.getElementById('ctrl-bt'), ctrlHR: document.getElementById('ctrl-hr'),
@@ -823,6 +835,7 @@
             btnPanelMute: document.getElementById('btn-panel-mute')
         };
 
+        const muteMsg = document.getElementById('mute-message');
         let currentSessionRef = null;
         let qrCodeInstance = null;
         let currentMonitorStatus = 'standby';
@@ -838,6 +851,40 @@
                 connectionStatusEl.style.color = '#ff0000';
             }
         });
+
+        // 🟢 정상 범위 초과 감지 및 자동 알람 함수 (EtCO2 30~40 적용)
+        function checkAutoAlarms() {
+            if (currentMonitorStatus !== 'running') return;
+
+            const isSysAbnormal = (state.sys < 90 || state.sys > 160);
+            const isHrAbnormal = (state.hr < 50 || state.hr > 120);
+            const isStAbnormal = (state.st < -0.5 || state.st > 1.0);
+            const isSpo2Abnormal = (state.spo2 < 95);
+            const isEtco2Abnormal = (state.etco2 < 30 || state.etco2 > 40);
+            const isRrAbnormal = (state.rr < 6 || state.rr > 30);
+            const isBtAbnormal = (state.bt < 35.0 || state.bt > 37.5);
+            const isRhythmAbnormal = (state.rhythm !== 'normal');
+
+            if (isSysAbnormal && !lastAlarmStatus.sys) triggerManualAlarm(DOM.boxValNBP);
+            if ((isHrAbnormal || isStAbnormal || isRhythmAbnormal) && (!lastAlarmStatus.hr && !lastAlarmStatus.st && !lastAlarmStatus.rhythm)) {
+                triggerManualAlarm(DOM.boxValHR);
+            }
+            if (isSpo2Abnormal && !lastAlarmStatus.spo2) triggerManualAlarm(DOM.boxValSpO2);
+            if (isEtco2Abnormal && !lastAlarmStatus.etco2) triggerManualAlarm(DOM.boxValEtCO2);
+            if (isRrAbnormal && !lastAlarmStatus.rr) triggerManualAlarm(DOM.boxValRR);
+            if (isBtAbnormal && !lastAlarmStatus.bt) triggerManualAlarm(DOM.boxValBT);
+
+            lastAlarmStatus = {
+                sys: isSysAbnormal,
+                hr: isHrAbnormal,
+                st: isStAbnormal,
+                spo2: isSpo2Abnormal,
+                etco2: isEtco2Abnormal,
+                rr: isRrAbnormal,
+                bt: isBtAbnormal,
+                rhythm: isRhythmAbnormal
+            };
+        }
 
         // ==========================================
         // 2. 세션 연결 및 변경 관리
@@ -884,12 +931,14 @@
                         DOM.labelNBPTitle.innerText = "NBP mmHg (2.5mins)";
                     }
 
-                    // 모니터 원격 On/Off 동기화
-                    if (state.monitorStatus === 'running' && currentMonitorStatus === 'standby') {
-                        startMonitorLocal();
-                    } else if (state.monitorStatus === 'standby' && currentMonitorStatus === 'running') {
-                        standbyMonitorLocal();
+                    // 🟢 모니터 원격 On/Off(Stand by) 동기화
+                    if (state.monitorStatus === 'running') {
+                        if (currentMonitorStatus !== 'running') startMonitorLocal();
+                    } else {
+                        if (currentMonitorStatus !== 'standby') standbyMonitorLocal();
                     }
+
+                    checkAutoAlarms();
                 }
             });
 
@@ -965,13 +1014,13 @@
             DOM.ctrlRR.value = state.rr; DOM.ctrlSys.value = state.sys;
             DOM.ctrlDia.value = state.dia; DOM.ctrlST.value = state.st;
 
-            // 🟢 음소거 버튼 UI 업데이트
-            muteMsg.style.display = state.isMuted ? 'block' : 'none';
+            // 🟢 음소거 메시지 표시 및 컨트롤러 버튼 스타일 동기화
+            if (muteMsg) muteMsg.style.display = state.isMuted ? 'block' : 'none';
             if (state.isMuted) {
-                DOM.btnPanelMute.style.background = '#dc3545'; // 음소거 시 빨간색
+                DOM.btnPanelMute.style.background = '#dc3545';
                 DOM.btnPanelMute.innerText = 'Unmute';
             } else {
-                DOM.btnPanelMute.style.background = '#6c757d'; // 평시 회색
+                DOM.btnPanelMute.style.background = '#6c757d';
                 DOM.btnPanelMute.innerText = 'Mute';
             }
         }
@@ -980,7 +1029,6 @@
             if (currentSessionRef) currentSessionRef.update(updates);
         }
 
-        // 🟢 SBP 갱신 및 DBP Sync 로직
         function applySysChange(newSys) {
             state.sys = Math.max(40, Math.min(250, newSys));
             if (state.dbpSync) {
@@ -1004,6 +1052,7 @@
 
             updateDisplay();
             syncToFirebase(state);
+            checkAutoAlarms();
         });
 
         DOM.btnWorsen.addEventListener('click', () => {
@@ -1013,6 +1062,7 @@
             state.etco2 = Math.max(10, Math.min(80, parseInt(state.etco2) - 1));
             updateDisplay();
             syncToFirebase({ sys: state.sys, dia: state.dia, hr: state.hr, etco2: state.etco2 });
+            checkAutoAlarms();
         });
 
         DOM.btnImprove.addEventListener('click', () => {
@@ -1022,20 +1072,21 @@
             state.etco2 = Math.max(10, Math.min(80, parseInt(state.etco2) + 1));
             updateDisplay();
             syncToFirebase({ sys: state.sys, dia: state.dia, hr: state.hr, etco2: state.etco2 });
+            checkAutoAlarms();
         });
 
         function applyTHRAPreset(presetKey) {
             const presets = {
-                '1-1': { sys: 204, dia: 172, hr: 73, spo2: 94, rr: 15, bt: 36.2, st: 0.2, etco2: 23, selfBreathing: true, abpMode: false, dbpSync: false },
-                '1-2': { sys: 124, dia: 81, hr: 74, spo2: 97, rr: 17, bt: 36.2, st: 0.5, etco2: 21, selfBreathing: true, abpMode: false, dbpSync: false },
-                '2': { sys: 75, dia: 42, hr: 95, spo2: 86, rr: 32, bt: 36.1, st: 3.4, etco2: 23, selfBreathing: true, abpMode: false, dbpSync: false },
-                '3': { sys: 70, dia: 41, hr: 82, spo2: 80, rr: 27, bt: 36.0, st: 5.5, etco2: 28, selfBreathing: false, abpMode: false, dbpSync: false },
-                '4': { sys: 100, dia: 50, hr: 82, spo2: 80, rr: 27, bt: 35.9, st: 5.2, etco2: 30, selfBreathing: false, abpMode: false, dbpSync: false },
-                '5': { sys: 72, dia: 54, hr: 98, spo2: 100, rr: 12, bt: 35.8, st: 4.2, etco2: 42, selfBreathing: false, abpMode: false, dbpSync: false },
-                '6': { sys: 104, dia: 70, hr: 110, spo2: 100, rr: 11, bt: 35.7, st: 2.8, etco2: 32, selfBreathing: false, abpMode: true, dbpSync: false },
-                '7': { sys: 91, dia: 57, hr: 121, spo2: 100, rr: 18, bt: 35.6, st: 2.8, etco2: 28, selfBreathing: false, abpMode: true, dbpSync: false },
-                '8': { sys: 81, dia: 58, hr: 98, spo2: 100, rr: 11, bt: 35.5, st: 3.1, etco2: 36, selfBreathing: false, abpMode: true, dbpSync: false },
-                '9': { sys: 109, dia: 51, hr: 110, spo2: 100, rr: 14, bt: 35.4, st: 2.5, etco2: 27, selfBreathing: false, abpMode: true, dbpSync: false }
+                '1-1': { sys: 204, dia: 172, hr: 73, spo2: 94, rr: 15, bt: 36.2, st: 0.2, etco2: 23, selfBreathing: true, abpMode: false, dbpSync: false, rhythm: 'normal' },
+                '1-2': { sys: 124, dia: 81, hr: 74, spo2: 97, rr: 17, bt: 36.2, st: 0.5, etco2: 21, selfBreathing: true, abpMode: false, dbpSync: false, rhythm: 'normal' },
+                '2': { sys: 75, dia: 42, hr: 95, spo2: 86, rr: 32, bt: 36.1, st: 3.4, etco2: 23, selfBreathing: true, abpMode: false, dbpSync: false, rhythm: 'normal' },
+                '3': { sys: 70, dia: 41, hr: 82, spo2: 80, rr: 27, bt: 36.0, st: 5.5, etco2: 28, selfBreathing: false, abpMode: false, dbpSync: false, rhythm: 'normal' },
+                '4': { sys: 100, dia: 50, hr: 82, spo2: 80, rr: 27, bt: 35.9, st: 5.2, etco2: 30, selfBreathing: false, abpMode: false, dbpSync: false, rhythm: 'normal' },
+                '5': { sys: 72, dia: 54, hr: 98, spo2: 100, rr: 12, bt: 35.8, st: 4.2, etco2: 42, selfBreathing: false, abpMode: false, dbpSync: false, rhythm: 'normal' },
+                '6': { sys: 104, dia: 70, hr: 110, spo2: 100, rr: 11, bt: 35.7, st: 2.8, etco2: 32, selfBreathing: false, abpMode: true, dbpSync: false, rhythm: 'normal' },
+                '7': { sys: 91, dia: 57, hr: 121, spo2: 100, rr: 18, bt: 35.6, st: 2.8, etco2: 28, selfBreathing: false, abpMode: true, dbpSync: false, rhythm: 'normal' },
+                '8': { sys: 81, dia: 58, hr: 98, spo2: 100, rr: 11, bt: 35.5, st: 3.1, etco2: 36, selfBreathing: false, abpMode: true, dbpSync: false, rhythm: 'normal' },
+                '9': { sys: 109, dia: 51, hr: 110, spo2: 100, rr: 14, bt: 35.4, st: 2.5, etco2: 27, selfBreathing: false, abpMode: true, dbpSync: false, rhythm: 'normal' }
             };
 
             const selected = presets[String(presetKey)];
@@ -1046,6 +1097,7 @@
                 toggleABPMode(state.abpMode);
                 updateDisplay();
                 syncToFirebase(state);
+                checkAutoAlarms();
             }
         }
 
@@ -1055,7 +1107,6 @@
             });
         });
 
-        // 🟢 - / + 스텝 조절 버튼 로직
         document.querySelectorAll('.step-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 const targetId = e.target.getAttribute('data-target');
@@ -1074,17 +1125,18 @@
             });
         });
 
-        DOM.ctrlBT.oninput = (e) => { state.bt = parseFloat(e.target.value); updateDisplay(); syncToFirebase({bt: state.bt}); };
-        DOM.ctrlHR.oninput = (e) => { state.hr = parseInt(e.target.value); updateDisplay(); syncToFirebase({hr: state.hr}); };
-        DOM.ctrlSpO2.oninput = (e) => { state.spo2 = parseInt(e.target.value); updateDisplay(); syncToFirebase({spo2: state.spo2}); };
-        DOM.ctrlEtCO2.oninput = (e) => { state.etco2 = parseInt(e.target.value); updateDisplay(); syncToFirebase({etco2: state.etco2}); };
-        DOM.ctrlRR.oninput = (e) => { state.rr = parseInt(e.target.value); updateDisplay(); syncToFirebase({rr: state.rr}); };
-        DOM.ctrlST.oninput = (e) => { state.st = parseFloat(e.target.value); updateDisplay(); syncToFirebase({st: state.st}); };
+        DOM.ctrlBT.oninput = (e) => { state.bt = parseFloat(e.target.value); updateDisplay(); syncToFirebase({bt: state.bt}); checkAutoAlarms(); };
+        DOM.ctrlHR.oninput = (e) => { state.hr = parseInt(e.target.value); updateDisplay(); syncToFirebase({hr: state.hr}); checkAutoAlarms(); };
+        DOM.ctrlSpO2.oninput = (e) => { state.spo2 = parseInt(e.target.value); updateDisplay(); syncToFirebase({spo2: state.spo2}); checkAutoAlarms(); };
+        DOM.ctrlEtCO2.oninput = (e) => { state.etco2 = parseInt(e.target.value); updateDisplay(); syncToFirebase({etco2: state.etco2}); checkAutoAlarms(); };
+        DOM.ctrlRR.oninput = (e) => { state.rr = parseInt(e.target.value); updateDisplay(); syncToFirebase({rr: state.rr}); checkAutoAlarms(); };
+        DOM.ctrlST.oninput = (e) => { state.st = parseFloat(e.target.value); updateDisplay(); syncToFirebase({st: state.st}); checkAutoAlarms(); };
 
         DOM.ctrlSys.oninput = (e) => { 
             applySysChange(parseInt(e.target.value)); 
             updateDisplay(); 
             syncToFirebase({sys: state.sys, dia: state.dia}); 
+            checkAutoAlarms();
         };
         
         DOM.ctrlDia.oninput = (e) => { 
@@ -1150,25 +1202,53 @@
         DOM.ctrlRhythm.addEventListener('change', (e) => {
             state.rhythm = e.target.value;
             syncToFirebase({rhythm: state.rhythm});
+            checkAutoAlarms();
         });
 
-        // 🟢 패널 상단 버튼 로직 추가 (Start, Stand by, Mute, Volume)
+        // 🟢 패널 상단 버튼 로직 (Start, Stand by, Mute, Volume)
         DOM.btnPanelStart.addEventListener('click', (e) => {
             e.stopPropagation();
-            DOM.btnStart.click();
+            state.monitorStatus = 'running';
+            syncToFirebase({ monitorStatus: 'running' });
+            startMonitorLocal();
         });
+
         DOM.btnPanelStandby.addEventListener('click', (e) => {
             e.stopPropagation();
-            DOM.btnStandby.click();
+            state = {
+                bt: 36.0, hr: 60, spo2: 100, etco2: 35, rr: 10,
+                sys: 120, dia: 80, st: 0.0, tWaveInverted: false, abpMode: false,
+                selfBreathing: false, rhythm: 'normal', dbpSync: false,
+                isMuted: false, volume: 100, monitorStatus: 'standby'
+            };
+            syncToFirebase(state);
+            standbyMonitorLocal();
         });
+
         DOM.btnPanelMute.addEventListener('click', (e) => {
             e.stopPropagation();
-            document.getElementById('mute-btn-overlay').click();
+            state.isMuted = !state.isMuted;
+            syncToFirebase({ isMuted: state.isMuted });
+            updateDisplay();
         });
+
         DOM.ctrlVolume.addEventListener('change', (e) => {
             state.volume = parseInt(e.target.value);
             syncToFirebase({ volume: state.volume });
         });
+
+        DOM.ctrlVolume.addEventListener('wheel', (e) => {
+            e.preventDefault();
+            const direction = e.deltaY < 0 ? 10 : -10;
+            let currentVol = parseInt(DOM.ctrlVolume.value) || 100;
+            let newVol = currentVol + direction;
+            if (newVol < 0) newVol = 0;
+            if (newVol > 100) newVol = 100;
+            
+            DOM.ctrlVolume.value = String(newVol);
+            state.volume = newVol;
+            syncToFirebase({ volume: state.volume });
+        }, { passive: false });
 
         function setupMonitorWheel(id, stateKey, min, max, step) {
             const el = document.getElementById(id);
@@ -1197,6 +1277,7 @@
                         updateDisplay();
                         syncToFirebase({ [stateKey]: newValue });
                     }
+                    checkAutoAlarms();
                 }
             }, { passive: false });
         }
@@ -1224,7 +1305,6 @@
         // 4. 모니터 시작, 알람, 파형 엔진
         // ==========================================
 
-        // 🟢 음소거 버튼 (오버레이)
         document.getElementById('mute-btn-overlay').addEventListener('click', () => {
             state.isMuted = !state.isMuted;
             syncToFirebase({ isMuted: state.isMuted });
@@ -1232,7 +1312,7 @@
         });
 
         function triggerManualAlarm(boxElement) {
-            if (boxElement.classList.contains('alarm-active')) return; 
+            if (!boxElement || boxElement.classList.contains('alarm-active')) return; 
             boxElement.classList.add('alarm-active');
             if (audioCtx && audioCtx.state === 'running' && !state.isMuted) {
                 const now = audioCtx.currentTime;
@@ -1246,7 +1326,7 @@
                     osc.frequency.setValueAtTime(500, startTime + 0.1); 
                     osc.connect(gainNode); gainNode.connect(audioCtx.destination);
                     gainNode.gain.setValueAtTime(0, startTime);
-                    gainNode.gain.linearRampToValueAtTime(0.3 * volRatio, startTime + 0.05);
+                    gainNode.gain.linearRampToValueAtTime(0.5 * volRatio, startTime + 0.05);
                     gainNode.gain.linearRampToValueAtTime(0, startTime + 0.4); 
                     osc.start(startTime); osc.stop(startTime + 0.4);
                 }
@@ -1261,34 +1341,35 @@
             });
         });
 
-       let audioCtx; let lastBeepTime = 0; let animationId; 
-        let ekgAudioBuffer = null; // 🟢 실제 음원을 담을 버퍼 추가
+        let audioCtx; let lastBeepTime = 0; let animationId; 
+        let ekgAudioBuffer = null; 
 
-        // 🟢 1. 실제 EKG 음원 파일을 불러오는 함수
         async function loadEkgSound(url) {
             try {
+                if (!audioCtx) {
+                    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                }
                 const response = await fetch(url);
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
                 const arrayBuffer = await response.arrayBuffer();
                 ekgAudioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
+                console.log("✅ EKG.mp3 음원 로드 완료");
             } catch (error) {
-                console.error("EKG 음원 로드 실패. 파일명이나 경로를 확인하세요:", error);
+                console.error("❌ EKG 음원 로드 실패:", error);
             }
         }
 
-        // 🟢 2. 비프음 재생 함수 (음원 재생 + SpO2 피치 조절 + 볼륨 조절)
         function playBeep() {
             if (!audioCtx || state.isMuted || state.rhythm === 'vf') return; 
             const now = audioCtx.currentTime;
             const volRatio = (state.volume !== undefined ? state.volume : 100) / 100;
 
             if (ekgAudioBuffer) {
-                // 준비된 실제 음원이 있을 경우
                 const source = audioCtx.createBufferSource();
                 source.buffer = ekgAudioBuffer;
                 
                 const gainNode = audioCtx.createGain();
                 
-                // 💡 SpO2에 따른 Pitch(음정) 변화 로직 (100%일 때 원음, 떨어지면 소리가 낮아짐)
                 let pitchRatio = 1.0;
                 if (state.spo2 < 100) {
                     pitchRatio = Math.max(0.6, 1.0 - ((100 - state.spo2) * 0.015));
@@ -1298,12 +1379,9 @@
                 source.connect(gainNode);
                 gainNode.connect(audioCtx.destination);
                 
-                // 볼륨 조절
-                gainNode.gain.setValueAtTime(volRatio, now); 
-                
+                gainNode.gain.setValueAtTime(volRatio * 2.5, now); 
                 source.start(now);
             } else {
-                // 만약 음원 파일 로드에 실패했다면 기존의 전자음을 비상용으로 재생
                 const osc1 = audioCtx.createOscillator(); const osc2 = audioCtx.createOscillator();
                 const mainGain = audioCtx.createGain();
 
@@ -1315,27 +1393,54 @@
 
                 osc1.connect(mainGain); osc2.connect(mainGain); mainGain.connect(audioCtx.destination);
                 mainGain.gain.setValueAtTime(0, now);
-                mainGain.gain.linearRampToValueAtTime(0.5 * volRatio, now + 0.02); 
+                mainGain.gain.linearRampToValueAtTime(0.8 * volRatio, now + 0.02); 
                 mainGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.2);
 
                 osc1.start(now); osc2.start(now); osc1.stop(now + 0.2); osc2.stop(now + 0.2);
             }
         }
 
-        // 🟢 3. 모니터 시작 버튼 이벤트 (클릭 시 오디오 활성화 및 음원 다운로드)
-        DOM.btnStart.addEventListener('click', async () => {
-            if (audioCtx) audioCtx.close();
-            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            
+        async function startMonitorLocal() {
+            currentMonitorStatus = 'running';
             DOM.overlay.style.display = 'none';
-            
-            // ⭐️ 여기에 준비하신 음원 파일 이름을 정확히 입력해 주세요! ⭐️
-            await loadEkgSound('EKG.mp3'); 
-
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioCtx.state === 'suspended') {
+                await audioCtx.resume();
+            }
+            if (!ekgAudioBuffer) {
+                await loadEkgSound('EKG.mp3');
+            }
             lastBeepTime = performance.now();
             cancelAnimationFrame(animationId);
             scanX = 0;
             animationId = requestAnimationFrame(drawWaveforms);
+            checkAutoAlarms();
+        }
+
+        function standbyMonitorLocal() {
+            currentMonitorStatus = 'standby';
+            DOM.overlay.style.display = 'flex';
+            cancelAnimationFrame(animationId);
+            if (audioCtx) {
+                audioCtx.close();
+                audioCtx = null;
+                ekgAudioBuffer = null;
+            }
+            for (let key in ctxs) {
+                if (ctxs[key]) ctxs[key].clearRect(0, 0, canvases[key].width, canvases[key].height);
+            }
+            lastAlarmStatus = {
+                sys: false, hr: false, st: false, spo2: false, etco2: false, rr: false, bt: false, rhythm: false
+            };
+            updateDisplay();
+        }
+
+        DOM.btnStart.addEventListener('click', async () => {
+            state.monitorStatus = 'running';
+            syncToFirebase({ monitorStatus: 'running' });
+            await startMonitorLocal();
         });
 
         DOM.btnStandby.addEventListener('click', () => {
@@ -1359,9 +1464,11 @@
         
         function resizeCanvas() {
             for (let key in canvases) {
-                canvases[key].width = canvases[key].parentElement.clientWidth;
-                canvases[key].height = canvases[key].parentElement.clientHeight;
-                ctxs[key] = canvases[key].getContext('2d');
+                if (canvases[key] && canvases[key].parentElement) {
+                    canvases[key].width = canvases[key].parentElement.clientWidth;
+                    canvases[key].height = canvases[key].parentElement.clientHeight;
+                    ctxs[key] = canvases[key].getContext('2d');
+                }
             }
         }
         window.addEventListener('resize', resizeCanvas);
