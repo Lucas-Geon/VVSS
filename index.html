@@ -248,8 +248,8 @@
         .val-number { font-size: 9cqh !important; font-weight: bold; line-height: 1; text-align: center; }
         .val-title { font-size: 2.5cqh !important; font-weight: bold; margin-bottom: 0.5cqh; text-align: center; }
 
-        #nbp-box-container .val-number { font-size: 8cqh !important; margin-top: 1cqh; }
-        #nbp-box-container .val-mean { font-size: 6cqh !important; font-weight: bold; margin-top: 0.5cqh; }
+        #nbp-box-container .val-number { font-size: 7cqh !important; margin-top: 1cqh; }
+        #nbp-box-container .val-mean { font-size: 5cqh !important; font-weight: bold; margin-top: 0.5cqh; }
         #box-val-bt {flex: 0.6;}        
         #box-val-bt .val-number { font-size: 6cqh !important; }
 
@@ -886,6 +886,8 @@
                     <option value="10">Vol: 10%</option>
                     <option value="0">Vol: 0%</option>
                 </select>
+<!-- ✅ 패들렛 커뮤니티 바로가기 버튼 추가 -->
+                <button type="button" class="panel-top-btn" style="background:#5c4b8b; color:#fff; border:1px solid #7c6bb0;" onclick="window.open('https://padlet.com/geonjiyong/VVSS', '_blank')" title="의견 및 프리셋 공유 패들렛 열기">💬 VVSS Community</button>
             </div>
             <button class="min-btn" id="ctrl-min-btn" title="최소화/열기">−</button>
         </div>
@@ -1676,8 +1678,8 @@
             }
         });
 
-        // 2. 프리셋 불러오기 (Import preset) - showOpenFilePicker / showSaveFilePicker 호환 (startIn: 'documents')
-        function applyImportedPresetObject(importedObj) {
+// 2. 프리셋 불러오기 (Import preset) - showOpenFilePicker / showSaveFilePicker 호환 (startIn: 'documents')
+        function applyImportedPresetObject(importedObj, fileName) {
             if (!importedObj || typeof importedObj !== 'object' || !importedObj.sets) {
                 alert('Invalid preset JSON file format.');
                 return;
@@ -1694,6 +1696,11 @@
             activePhaseIndex = null;
             savePresetsToStorage();
             renderPresetUI();
+
+            // ✅ 불러오기 완료 메시지 표출
+            if (fileName) {
+                alert(`Successfully imported '${fileName}'`);
+            }
         }
 
         presetDOM.btnImport.addEventListener('click', async () => {
@@ -1710,7 +1717,7 @@
                     const file = await fileHandle.getFile();
                     const text = await file.text();
                     const parsed = JSON.parse(text);
-                    applyImportedPresetObject(parsed);
+                    applyImportedPresetObject(parsed, file.name); // ✅ file.name 전달
                 } catch (err) {
                     if (err.name !== 'AbortError') {
                         console.error('Import failed:', err);
@@ -1728,7 +1735,7 @@
                     try {
                         const text = await file.text();
                         const parsed = JSON.parse(text);
-                        applyImportedPresetObject(parsed);
+                        applyImportedPresetObject(parsed, file.name); // ✅ file.name 전달
                     } catch (err) {
                         alert('Failed to load the preset file.');
                     }
@@ -1736,7 +1743,6 @@
                 input.click();
             }
         });
-
         // 초기 프리셋 로드 및 UI 렌더링
         loadPresetsFromStorage();
         renderPresetUI();
