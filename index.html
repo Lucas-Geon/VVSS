@@ -479,20 +479,245 @@
             cursor: ns-resize;
         }
 
-        /* 🟢 시나리오 섹션 스타일 */
+        /* 🟢 [Scenario Preset Management] 섹션 스타일 (첨부 이미지 디자인 반영) */
         .scenario-section {
-            margin-top: 3px; padding-top: 5px; border-top: 1px dashed #555;
-            display: flex; flex-direction: column; gap: 3px;
+            margin-top: 6px;
+            padding: 8px;
+            background: #1d1d1d;
+            border: 1px solid #3d3d3d;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
         }
-        .scenario-header { font-size: 11px; font-weight: bold; color: #ffeb3b; }
-        
+        .scenario-header {
+            font-size: 12px;
+            font-weight: bold;
+            color: #e6db00;
+            text-align: left;
+            letter-spacing: 0.5px;
+        }
+        .preset-top-controls {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            width: 100%;
+        }
+        #preset-set-select {
+            flex: 1.5;
+            min-width: 0;
+            background-color: #111111;
+            color: #ffea00;
+            border: 1px solid #555555;
+            border-radius: 5px;
+            padding: 5px 6px;
+            font-size: 11px;
+            font-weight: bold;
+            cursor: pointer;
+            outline: none;
+        }
+        .btn-preset-ctrl {
+            background-color: #4f4f4f;
+            color: #ffffff;
+            border: 1px solid #777777;
+            border-radius: 5px;
+            padding: 5px 6px;
+            font-size: 10.5px;
+            font-weight: bold;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: 0.15s;
+        }
+        .btn-preset-ctrl:hover {
+            background-color: #666666;
+        }
+        .btn-preset-ctrl.edit-active {
+            background-color: #ff9800;
+            color: #000000;
+            border-color: #ffc107;
+            box-shadow: 0 0 8px rgba(255, 152, 0, 0.6);
+        }
+        .preset-io-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px;
+            width: 100%;
+        }
+        .btn-preset-import {
+            background-color: #005b6e;
+            color: #ffffff;
+            border: 1px solid #148096;
+            border-radius: 5px;
+            padding: 7px 4px;
+            font-size: 11.5px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.15s;
+        }
+        .btn-preset-import:hover {
+            background-color: #00768f;
+        }
+        .btn-preset-export {
+            background-color: #7a0000;
+            color: #ffffff;
+            border: 1px solid #a82020;
+            border-radius: 5px;
+            padding: 7px 4px;
+            font-size: 11.5px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.15s;
+        }
+        .btn-preset-export:hover {
+            background-color: #9c0000;
+        }
+
+        .scenario-divider {
+            border-top: 1px solid #333;
+            margin: 1px 0;
+        }
+
+        .scenario-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 6px;
+            min-height: 28px;
+        }
+
         .btn-scenario {
-            border: 1px solid #555;
-            border-radius: 4px; padding: 5px 2px; font-size: 10px; font-weight: bold;
-            cursor: pointer; transition: all 0.15s ease; text-align: center; white-space: nowrap;
+            position: relative;
+            background-color: #383838;
+            color: #ffffff;
+            border: 1px solid #5a5a5a;
+            border-radius: 5px;
+            padding: 6px 2px;
+            font-size: 10.5px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            text-align: center;
+            white-space: nowrap;
+            overflow: visible;
+            text-overflow: ellipsis;
+            user-select: none;
         }
-        .btn-scenario:hover { filter: brightness(1.2); box-shadow: 0 0 6px rgba(255, 255, 255, 0.2); }
-        .btn-scenario:active { transform: scale(0.96); }
+        .btn-scenario span.phase-label {
+            display: block;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            padding: 0 2px;
+        }
+        .btn-scenario:hover {
+            background-color: #4d4d4d;
+            border-color: #ffeb3b;
+        }
+        .btn-scenario:active {
+            transform: scale(0.96);
+        }
+        /* 현재 선택된 단계 강조 (바이탈 조작 시 자동 저장 표시) */
+        .btn-scenario.active-phase {
+            border-color: #ffeb3b;
+            background-color: #4a4520;
+            color: #ffeb3b;
+            box-shadow: 0 0 6px rgba(255, 235, 59, 0.45);
+        }
+        /* 수정 모드 시 스타일 */
+        .btn-scenario.edit-mode-item {
+            border-style: dashed;
+            border-color: #ff9800;
+            cursor: grab;
+        }
+        .btn-scenario.edit-mode-item:active {
+            cursor: grabbing;
+        }
+        .btn-scenario.dragging {
+            opacity: 0.4;
+            border-color: #00ffff;
+        }
+        .btn-scenario.drag-over {
+            border: 2px solid #00ff00;
+            transform: scale(1.04);
+        }
+
+        /* 좌측 상단 조그만 ⓧ 삭제 버튼 */
+        .phase-del-btn {
+            position: absolute;
+            top: -6px;
+            left: -6px;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background-color: #d32f2f;
+            color: #ffffff;
+            border: 1px solid #ffffff;
+            font-size: 9px;
+            line-height: 13px;
+            text-align: center;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 20;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.7);
+        }
+        .phase-del-btn:hover {
+            background-color: #ff1744;
+            transform: scale(1.15);
+        }
+
+        /* 🟢 Save changes? (Yes / No) 커스텀 모달 스타일 */
+        #save-confirm-modal {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(0, 0, 0, 0.75);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+        }
+        .modal-card {
+            background: #252525;
+            border: 1px solid #666;
+            border-radius: 10px;
+            padding: 18px 22px;
+            width: 280px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        .modal-title {
+            font-size: 14px;
+            font-weight: bold;
+            color: #ffffff;
+        }
+        .modal-btn-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        .modal-btn {
+            padding: 8px 10px;
+            border-radius: 6px;
+            border: none;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.15s;
+        }
+        .modal-btn-yes {
+            background-color: #28a745;
+            color: #ffffff;
+        }
+        .modal-btn-yes:hover { background-color: #218838; }
+        .modal-btn-no {
+            background-color: #dc3545;
+            color: #ffffff;
+        }
+        .modal-btn-no:hover { background-color: #c82333; }
 
         /* 🟢 Apply & Reset 버튼 나란히 배치 */
         .action-btn-group {
@@ -551,6 +776,17 @@
     </style>
 </head>
 <body>
+    <!-- 🟢 Save Changes 확인 모달 (Yes(Save) / No(Discard)) -->
+    <div id="save-confirm-modal">
+        <div class="modal-card">
+            <div class="modal-title">Save changes?</div>
+            <div class="modal-btn-row">
+                <button type="button" class="modal-btn modal-btn-yes" id="modal-btn-save">Yes (Save)</button>
+                <button type="button" class="modal-btn modal-btn-no" id="modal-btn-discard">No (Discard)</button>
+            </div>
+        </div>
+    </div>
+
     <div id="monitor-wrapper">
         <div id="monitor-handle" title="상단 베젤을 잡고 이동"></div>
         <div id="monitor-resizer" class="resizer-handle" title="크기 조절"></div>
@@ -911,22 +1147,28 @@
                 </div>
             </div>
 
-            <!-- 🟢 [동적 시나리오 프리셋] 영역 교체됨 -->
+            <!-- 🟢 [시나리오 프리셋 관리] 영역 (신규 디자인 및 기능) -->
             <div class="scenario-section">
-                <div class="scenario-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 3px;">
-                    <span>[시나리오 프리셋 관리]</span>
-                    <button type="button" id="btn-add-set" style="font-size: 9px; padding: 2px 5px; background: #444; color: #fff; border: 1px solid #777; border-radius: 3px; cursor: pointer;">+ 세트 추가</button>
-                </div>
+                <div class="scenario-header">[Scenario Preset Management]</div>
                 
-                <div style="display: flex; gap: 4px; margin-top: 2px;">
-                    <select id="preset-set-select" style="flex: 1.2; background: #111; color: #ffeb3b; border: 1px solid #555; padding: 3px; border-radius: 4px; font-size: 10px; font-weight: bold; outline: none; cursor: pointer;"></select>
-                    <select id="preset-step-select" style="flex: 1; background: #111; color: #fff; border: 1px solid #555; padding: 3px; border-radius: 4px; font-size: 10px; font-weight: bold; outline: none; cursor: pointer;"></select>
+                <!-- 1행: 세트 드롭다운 / New set / Add a phase / Edit mode -->
+                <div class="preset-top-controls">
+                    <select id="preset-set-select" title="프리셋 세트 선택"></select>
+                    <button type="button" class="btn-preset-ctrl" id="btn-new-set">New set</button>
+                    <button type="button" class="btn-preset-ctrl" id="btn-add-phase">Add a phase</button>
+                    <button type="button" class="btn-preset-ctrl" id="btn-edit-mode">Edit mode</button>
                 </div>
 
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 4px; margin-top: 4px;">
-                    <button type="button" id="btn-load-preset" class="btn-scenario" style="background: #005f73; color: #fff;">불러오기 (적용)</button>
-                    <button type="button" id="btn-save-preset" class="btn-scenario" style="background: #6a040f; color: #ffcccc;">현재상태 저장</button>
+                <!-- 2행: Import preset / Export preset -->
+                <div class="preset-io-row">
+                    <button type="button" class="btn-preset-import" id="btn-import-preset">Import preset</button>
+                    <button type="button" class="btn-preset-export" id="btn-export-preset">Export preset</button>
                 </div>
+
+                <div class="scenario-divider"></div>
+
+                <!-- 3행: 단계(Phase) 버튼 그리드 -->
+                <div class="scenario-grid" id="scenario-phase-grid"></div>
             </div>
 
         </div>
@@ -1058,6 +1300,447 @@
         let qrCodeInstance = null;
         let currentMonitorStatus = 'standby';
 
+        // ==========================================
+        // 🟢 시나리오 프리셋 관리 시스템 데이터 및 로직
+        // ==========================================
+        const DEFAULT_PRESET_DATA = {
+            currentSet: "RC 시나리오 (기본)",
+            sets: {
+                "RC 시나리오 (기본)": [
+                    { name: "#1-1", vitals: { sys: 124, dia: 83, hr: 60, spo2: 98,  etco2: 42, rr: 10, bt: 36.3, st: 0.0, rhythm: 'normal', etco2Pattern: 'normal', cleftDepth: 0.4, tWaveInverted: false, selfBreathing: false, abpMode: false, dbpSync: true } },
+                    { name: "#1-2", vitals: { sys: 124, dia: 83, hr: 60, spo2: 100, etco2: 35, rr: 10, bt: 36.3, st: 0.0, rhythm: 'normal', etco2Pattern: 'normal', cleftDepth: 0.4, tWaveInverted: false, selfBreathing: false, abpMode: false, dbpSync: true } },
+                    { name: "#2-1", vitals: { sys: 75,  dia: 50, hr: 62, spo2: 100, etco2: 31, rr: 10, bt: 36.2, st: 0.0, rhythm: 'normal', etco2Pattern: 'normal', cleftDepth: 0.4, tWaveInverted: false, selfBreathing: false, abpMode: false, dbpSync: true } },
+                    { name: "#2-2", vitals: { sys: 102, dia: 68, hr: 75, spo2: 100, etco2: 33, rr: 10, bt: 36.2, st: 0.0, rhythm: 'normal', etco2Pattern: 'normal', cleftDepth: 0.4, tWaveInverted: false, selfBreathing: false, abpMode: false, dbpSync: true } },
+                    { name: "#3-1", vitals: { sys: 81,  dia: 54, hr: 75, spo2: 100, etco2: 32, rr: 10, bt: 36.2, st: 0.0, rhythm: 'normal', etco2Pattern: 'normal', cleftDepth: 0.4, tWaveInverted: false, selfBreathing: false, abpMode: false, dbpSync: true } },
+                    { name: "#3-2", vitals: { sys: 93,  dia: 62, hr: 78, spo2: 100, etco2: 34, rr: 10, bt: 36.1, st: 0.0, rhythm: 'normal', etco2Pattern: 'normal', cleftDepth: 0.4, tWaveInverted: false, selfBreathing: false, abpMode: false, dbpSync: true } },
+                    { name: "#4-1", vitals: { sys: 132, dia: 88, hr: 81, spo2: 98,  etco2: 41, rr: 10, bt: 36.1, st: 0.0, rhythm: 'normal', etco2Pattern: 'normal', cleftDepth: 0.4, tWaveInverted: false, selfBreathing: false, abpMode: false, dbpSync: true } },
+                    { name: "#4-2", vitals: { sys: 125, dia: 83, hr: 82, spo2: 100, etco2: 36, rr: 14, bt: 36.0, st: 0.0, rhythm: 'normal', etco2Pattern: 'normal', cleftDepth: 0.4, tWaveInverted: false, selfBreathing: false, abpMode: false, dbpSync: true } },
+                    { name: "#5-1", vitals: { sys: 117, dia: 78, hr: 81, spo2: 99,  etco2: 39, rr: 14, bt: 36.0, st: 0.0, rhythm: 'normal', etco2Pattern: 'curare', cleftDepth: 0.4, tWaveInverted: false, selfBreathing: true,  abpMode: false, dbpSync: true } },
+                    { name: "#5-2", vitals: { sys: 115, dia: 77, hr: 85, spo2: 100, etco2: 36, rr: 14, bt: 36.0, st: 0.0, rhythm: 'normal', etco2Pattern: 'normal', cleftDepth: 0.4, tWaveInverted: false, selfBreathing: false, abpMode: false, dbpSync: true } },
+                    { name: "#6-1", vitals: { sys: 152, dia: 101,hr: 75, spo2: 100, etco2: 30, rr: 14, bt: 36.0, st: 0.0, rhythm: 'normal', etco2Pattern: 'normal', cleftDepth: 0.4, tWaveInverted: false, selfBreathing: false, abpMode: false, dbpSync: true } },
+                    { name: "#6-2", vitals: { sys: 93,  dia: 62, hr: 78, spo2: 100, etco2: 34, rr: 10, bt: 36.0, st: 0.0, rhythm: 'normal', etco2Pattern: 'normal', cleftDepth: 0.4, tWaveInverted: false, selfBreathing: false, abpMode: false, dbpSync: true } }
+                ]
+            }
+        };
+
+        let presetData = JSON.parse(JSON.stringify(DEFAULT_PRESET_DATA));
+        let activePhaseIndex = null;
+        let isEditMode = false;
+        let backupBeforeEdit = null;
+        let dragSrcIndex = null;
+
+        const presetDOM = {
+            setSelect: document.getElementById('preset-set-select'),
+            btnNewSet: document.getElementById('btn-new-set'),
+            btnAddPhase: document.getElementById('btn-add-phase'),
+            btnEditMode: document.getElementById('btn-edit-mode'),
+            btnImport: document.getElementById('btn-import-preset'),
+            btnExport: document.getElementById('btn-export-preset'),
+            phaseGrid: document.getElementById('scenario-phase-grid'),
+            saveModal: document.getElementById('save-confirm-modal'),
+            btnModalSave: document.getElementById('modal-btn-save'),
+            btnModalDiscard: document.getElementById('modal-btn-discard')
+        };
+
+        function loadPresetsFromStorage() {
+            try {
+                const saved = localStorage.getItem('vvss_preset_data_v1');
+                if (saved) {
+                    const parsed = JSON.parse(saved);
+                    if (parsed && parsed.sets && Object.keys(parsed.sets).length > 0) {
+                        presetData = parsed;
+                        if (!presetData.sets[presetData.currentSet]) {
+                            presetData.currentSet = Object.keys(presetData.sets)[0];
+                        }
+                    }
+                }
+            } catch (e) {
+                console.warn('Preset localStorage load failed:', e);
+            }
+        }
+
+        function savePresetsToStorage() {
+            try {
+                localStorage.setItem('vvss_preset_data_v1', JSON.stringify(presetData));
+            } catch (e) {
+                console.warn('Preset localStorage save failed:', e);
+            }
+        }
+
+        function extractCurrentVitals() {
+            return {
+                sys: Number(state.sys),
+                dia: Number(state.dia),
+                hr: Number(state.hr),
+                spo2: Number(state.spo2),
+                etco2: Number(state.etco2),
+                rr: Number(state.rr),
+                bt: Number(state.bt),
+                st: Number(state.st),
+                rhythm: state.rhythm || 'normal',
+                etco2Pattern: state.etco2Pattern || 'normal',
+                cleftDepth: Number(state.cleftDepth || 0.4),
+                tWaveInverted: !!state.tWaveInverted,
+                selfBreathing: !!state.selfBreathing,
+                abpMode: !!state.abpMode,
+                dbpSync: !!state.dbpSync
+            };
+        }
+
+        // 7. 선택된 단계가 있을 때 컨트롤러 바이탈 조작 시 해당 단계에 자동 저장
+        function updateActivePhaseVitalsIfSelected() {
+            if (activePhaseIndex === null) return;
+            const currentPhases = presetData.sets[presetData.currentSet];
+            if (!currentPhases || !currentPhases[activePhaseIndex]) return;
+
+            currentPhases[activePhaseIndex].vitals = extractCurrentVitals();
+            if (!isEditMode) {
+                savePresetsToStorage();
+            }
+        }
+
+        function renderPresetUI() {
+            // 드롭다운 렌더링
+            presetDOM.setSelect.innerHTML = '';
+            Object.keys(presetData.sets).forEach(setName => {
+                const opt = document.createElement('option');
+                opt.value = setName;
+                opt.textContent = setName;
+                if (setName === presetData.currentSet) opt.selected = true;
+                presetDOM.setSelect.appendChild(opt);
+            });
+
+            // Edit mode 버튼 상태 반영
+            if (isEditMode) {
+                presetDOM.btnEditMode.textContent = 'Save changes';
+                presetDOM.btnEditMode.classList.add('edit-active');
+            } else {
+                presetDOM.btnEditMode.textContent = 'Edit mode';
+                presetDOM.btnEditMode.classList.remove('edit-active');
+            }
+
+            // 단계(Phase) 버튼 그리드 렌더링
+            presetDOM.phaseGrid.innerHTML = '';
+            const phases = presetData.sets[presetData.currentSet] || [];
+
+            phases.forEach((phaseObj, idx) => {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'btn-scenario';
+                if (idx === activePhaseIndex) btn.classList.add('active-phase');
+                if (isEditMode) btn.classList.add('edit-mode-item');
+
+                const labelSpan = document.createElement('span');
+                labelSpan.className = 'phase-label';
+                labelSpan.textContent = phaseObj.name;
+                btn.appendChild(labelSpan);
+
+                // 클릭 시 해당 단계의 바이탈 불러오기 및 활성화
+                btn.addEventListener('click', (e) => {
+                    if (e.target.classList.contains('phase-del-btn')) return;
+                    applyPhasePreset(idx);
+                });
+
+                // 수정 모드 기능 (더블클릭 이름 수정, ⓧ 삭제, 드래그 순서 변경)
+                if (isEditMode) {
+                    btn.title = '더블클릭: 이름 수정 / 드래그: 순서 변경';
+
+                    // 더블클릭하여 단계 이름 수정
+                    btn.addEventListener('dblclick', (e) => {
+                        e.stopPropagation();
+                        const newName = prompt('Please enter the new phase name', phaseObj.name);
+                        if (newName !== null && newName.trim() !== '') {
+                            phases[idx].name = newName.trim();
+                            renderPresetUI();
+                        }
+                    });
+
+                    // 좌측 상단 조그만 ⓧ 버튼
+                    const delBtn = document.createElement('span');
+                    delBtn.className = 'phase-del-btn';
+                    delBtn.textContent = '✕';
+                    delBtn.title = 'Delete this phase';
+                    delBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        if (confirm('Delete this phase?')) {
+                            phases.splice(idx, 1);
+                            if (activePhaseIndex === idx) activePhaseIndex = null;
+                            else if (activePhaseIndex !== null && activePhaseIndex > idx) activePhaseIndex--;
+                            renderPresetUI();
+                        }
+                    });
+                    btn.appendChild(delBtn);
+
+                    // 드래그 앤 드롭으로 순서 변경
+                    btn.draggable = true;
+                    btn.addEventListener('dragstart', (e) => {
+                        dragSrcIndex = idx;
+                        btn.classList.add('dragging');
+                        if (e.dataTransfer) {
+                            e.dataTransfer.effectAllowed = 'move';
+                            e.dataTransfer.setData('text/plain', String(idx));
+                        }
+                    });
+                    btn.addEventListener('dragend', () => {
+                        btn.classList.remove('dragging');
+                        presetDOM.phaseGrid.querySelectorAll('.btn-scenario').forEach(el => el.classList.remove('drag-over'));
+                    });
+                    btn.addEventListener('dragover', (e) => {
+                        e.preventDefault();
+                        if (e.dataTransfer) e.dataTransfer.dropEffect = 'move';
+                        btn.classList.add('drag-over');
+                    });
+                    btn.addEventListener('dragleave', () => {
+                        btn.classList.remove('drag-over');
+                    });
+                    btn.addEventListener('drop', (e) => {
+                        e.preventDefault();
+                        btn.classList.remove('drag-over');
+                        if (dragSrcIndex === null || dragSrcIndex === idx) return;
+
+                        const movedItem = phases.splice(dragSrcIndex, 1)[0];
+                        phases.splice(idx, 0, movedItem);
+
+                        // activePhaseIndex 인덱스 보정
+                        if (activePhaseIndex === dragSrcIndex) {
+                            activePhaseIndex = idx;
+                        } else if (activePhaseIndex !== null) {
+                            if (dragSrcIndex < activePhaseIndex && idx >= activePhaseIndex) activePhaseIndex--;
+                            else if (dragSrcIndex > activePhaseIndex && idx <= activePhaseIndex) activePhaseIndex++;
+                        }
+                        dragSrcIndex = null;
+                        renderPresetUI();
+                    });
+                }
+
+                presetDOM.phaseGrid.appendChild(btn);
+            });
+        }
+
+        function applyPhasePreset(idx) {
+            const phases = presetData.sets[presetData.currentSet];
+            if (!phases || !phases[idx]) return;
+
+            activePhaseIndex = idx;
+            const selectedVitals = JSON.parse(JSON.stringify(phases[idx].vitals));
+
+            Object.assign(state, selectedVitals);
+            if (state.dbpSync && selectedVitals.dia === undefined) {
+                applySysChange(state.sys);
+            }
+
+            DOM.ctrlSelfBreathing.checked = !!state.selfBreathing;
+            DOM.ctrlDbpSync.checked = !!state.dbpSync;
+            DOM.ctrlTWave.checked = !!state.tWaveInverted;
+            DOM.ctrlRhythm.value = state.rhythm || 'normal';
+            DOM.ctrlEtco2Pattern.value = state.etco2Pattern || 'normal';
+            toggleABPMode(!!state.abpMode);
+
+            updateDisplay();
+            renderPresetUI();
+            syncToFirebase(state);
+            checkAutoAlarms();
+        }
+
+        // 3. 드롭다운으로 세트 변경
+        presetDOM.setSelect.addEventListener('change', (e) => {
+            presetData.currentSet = e.target.value;
+            activePhaseIndex = null;
+            if (!isEditMode) savePresetsToStorage();
+            renderPresetUI();
+        });
+
+        // 4. 신규세트 (New set)
+        presetDOM.btnNewSet.addEventListener('click', () => {
+            const setName = prompt('Please enter the set name');
+            if (setName === null) return;
+            const trimmed = setName.trim();
+            if (!trimmed) return;
+
+            if (presetData.sets[trimmed]) {
+                alert('A set with this name already exists.');
+                return;
+            }
+
+            presetData.sets[trimmed] = []; // 세트 추가 시 단계는 비어있음
+            presetData.currentSet = trimmed;
+            activePhaseIndex = null;
+            if (!isEditMode) savePresetsToStorage();
+            renderPresetUI();
+        });
+
+        // 5. 단계추가 (Add a phase)
+        presetDOM.btnAddPhase.addEventListener('click', () => {
+            const phaseName = prompt('Please enter the phase name');
+            if (phaseName === null) return;
+            const trimmed = phaseName.trim();
+            if (!trimmed) return;
+
+            // 현재 입력창에 입력 중인 수치까지 반영하여 현재 바이탈 캡처
+            state.bt = parseFloat(DOM.inBT.value) || state.bt;
+            state.hr = parseInt(DOM.inHR.value) || state.hr;
+            state.st = parseFloat(DOM.inST.value) || 0.0;
+            state.spo2 = parseInt(DOM.inSpO2.value) || state.spo2;
+            state.etco2 = parseInt(DOM.inEtCO2.value) || state.etco2;
+            state.rr = parseInt(DOM.inRR.value) || state.rr;
+            state.sys = parseInt(DOM.inSys.value) || state.sys;
+            state.dia = parseInt(DOM.inDia.value) || state.dia;
+
+            if (!presetData.sets[presetData.currentSet]) {
+                presetData.sets[presetData.currentSet] = [];
+            }
+
+            presetData.sets[presetData.currentSet].push({
+                name: trimmed,
+                vitals: extractCurrentVitals()
+            });
+
+            activePhaseIndex = presetData.sets[presetData.currentSet].length - 1;
+            if (!isEditMode) savePresetsToStorage();
+            renderPresetUI();
+        });
+
+        // 6. 수정모드 (Edit mode / Save changes)
+        presetDOM.btnEditMode.addEventListener('click', () => {
+            if (!isEditMode) {
+                // Edit mode 진입 전 상태 백업
+                backupBeforeEdit = JSON.parse(JSON.stringify(presetData));
+                isEditMode = true;
+                renderPresetUI();
+            } else {
+                // Save changes 클릭 시 Yes(Save) / No(Discard) 모달 표출
+                presetDOM.saveModal.style.display = 'flex';
+            }
+        });
+
+        presetDOM.btnModalSave.addEventListener('click', () => {
+            presetDOM.saveModal.style.display = 'none';
+            isEditMode = false;
+            backupBeforeEdit = null;
+            savePresetsToStorage();
+            renderPresetUI();
+        });
+
+        presetDOM.btnModalDiscard.addEventListener('click', () => {
+            presetDOM.saveModal.style.display = 'none';
+            if (backupBeforeEdit) {
+                presetData = JSON.parse(JSON.stringify(backupBeforeEdit));
+            }
+            isEditMode = false;
+            backupBeforeEdit = null;
+            activePhaseIndex = null;
+            renderPresetUI();
+        });
+
+        // 1. 프리셋 내보내기 (Export preset) - showSaveFilePicker API (startIn: 'documents')
+        presetDOM.btnExport.addEventListener('click', async () => {
+            const exportJsonStr = JSON.stringify(presetData, null, 2);
+
+            if (window.showSaveFilePicker) {
+                try {
+                    const handle = await window.showSaveFilePicker({
+                        suggestedName: `${presetData.currentSet || 'preset'}.json`,
+                        startIn: 'documents',
+                        types: [{
+                            description: 'JSON Preset File',
+                            accept: { 'application/json': ['.json'] }
+                        }]
+                    });
+                    const writable = await handle.createWritable();
+                    await writable.write(exportJsonStr);
+                    await writable.close();
+
+                    const baseName = handle.name.replace(/\.json$/i, '');
+                    alert(`Saved with the filename '${baseName}'`);
+                } catch (err) {
+                    if (err.name !== 'AbortError') {
+                        console.error('Export failed:', err);
+                        alert('Failed to export preset file.');
+                    }
+                }
+            } else {
+                // 브라우저가 showSaveFilePicker를 지원하지 않을 때의 폴백
+                const fileNameInput = prompt('Please enter a file name', presetData.currentSet || 'preset');
+                if (!fileNameInput) return;
+                const cleanName = fileNameInput.trim().replace(/\.json$/i, '');
+                const blob = new Blob([exportJsonStr], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `${cleanName}.json`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                alert(`Saved with the filename '${cleanName}'`);
+            }
+        });
+
+        // 2. 프리셋 불러오기 (Import preset) - showOpenFilePicker / showSaveFilePicker 호환 (startIn: 'documents')
+        function applyImportedPresetObject(importedObj) {
+            if (!importedObj || typeof importedObj !== 'object' || !importedObj.sets) {
+                alert('Invalid preset JSON file format.');
+                return;
+            }
+            presetData = importedObj;
+            const setNames = Object.keys(presetData.sets);
+            if (setNames.length === 0) {
+                presetData = JSON.parse(JSON.stringify(DEFAULT_PRESET_DATA));
+            } else if (!presetData.currentSet || !presetData.sets[presetData.currentSet]) {
+                presetData.currentSet = setNames[0];
+            }
+            isEditMode = false;
+            backupBeforeEdit = null;
+            activePhaseIndex = null;
+            savePresetsToStorage();
+            renderPresetUI();
+        }
+
+        presetDOM.btnImport.addEventListener('click', async () => {
+            if (window.showOpenFilePicker) {
+                try {
+                    const [fileHandle] = await window.showOpenFilePicker({
+                        startIn: 'documents',
+                        multiple: false,
+                        types: [{
+                            description: 'JSON Preset File',
+                            accept: { 'application/json': ['.json'] }
+                        }]
+                    });
+                    const file = await fileHandle.getFile();
+                    const text = await file.text();
+                    const parsed = JSON.parse(text);
+                    applyImportedPresetObject(parsed);
+                } catch (err) {
+                    if (err.name !== 'AbortError') {
+                        console.error('Import failed:', err);
+                        alert('Failed to load the preset file.');
+                    }
+                }
+            } else {
+                // 구형/모바일 브라우저 폴백
+                const input = document.createElement('input');
+                input.type = 'file';
+                input.accept = '.json,application/json';
+                input.onchange = async (e) => {
+                    const file = e.target.files[0];
+                    if (!file) return;
+                    try {
+                        const text = await file.text();
+                        const parsed = JSON.parse(text);
+                        applyImportedPresetObject(parsed);
+                    } catch (err) {
+                        alert('Failed to load the preset file.');
+                    }
+                };
+                input.click();
+            }
+        });
+
+        // 초기 프리셋 로드 및 UI 렌더링
+        loadPresetsFromStorage();
+        renderPresetUI();
+
         // 🟢 연결 상태 감지
         const connectionStatusEl = document.getElementById('connection-status');
         firebase.database().ref('.info/connected').on('value', (snap) => {
@@ -1141,7 +1824,6 @@
                 const triggerData = snap.val();
                 if (!triggerData || !triggerData.target) return;
                 
-                // 3초 이내에 전송된 알람만 처리하여 재접속 시 이전 알람 중복 실행 방지
                 if (Date.now() - triggerData.timestamp < 3000) {
                     const targetBoxes = {
                         nbp: DOM.boxValNBP,
@@ -1457,6 +2139,7 @@
             }
 
             updateDisplay();
+            updateActivePhaseVitalsIfSelected();
             syncToFirebase(state);
             checkAutoAlarms();
         });
@@ -1470,6 +2153,9 @@
             state.monitorStatus = currentStatus;
             state.volume = currentVol;
             state.isMuted = currentMuted;
+
+            activePhaseIndex = null;
+            renderPresetUI();
 
             DOM.ctrlSelfBreathing.checked = state.selfBreathing;
             DOM.ctrlDbpSync.checked = state.dbpSync;
@@ -1486,6 +2172,7 @@
             state.hr = Math.max(20, Math.min(300, parseInt(state.hr) + 2));
             state.etco2 = Math.max(1, Math.min(100, parseInt(state.etco2) - 1));
             updateDisplay();
+            updateActivePhaseVitalsIfSelected();
             syncToFirebase({ sys: state.sys, dia: state.dia, hr: state.hr, etco2: state.etco2 });
             checkAutoAlarms();
         });
@@ -1495,142 +2182,10 @@
             state.hr = Math.max(20, Math.min(300, parseInt(state.hr) - 2));
             state.etco2 = Math.max(1, Math.min(100, parseInt(state.etco2) + 1));
             updateDisplay();
+            updateActivePhaseVitalsIfSelected();
             syncToFirebase({ sys: state.sys, dia: state.dia, hr: state.hr, etco2: state.etco2 });
             checkAutoAlarms();
         });
-
-        // ==========================================
-        // 🟢 동적 시나리오 프리셋 관리 (추가된 영역)
-        // ==========================================
-        const DEFAULT_PRESET_SETS = {
-            "RC 시나리오 (기본)": {
-                '1-1': { sys: 124, dia: 82, hr: 60, spo2: 98,  etco2: 42, rr: 10, bt: 36.3, st: 0.0, rhythm: 'normal', tWaveInverted: false, selfBreathing: false, abpMode: false, dbpSync: true },
-                '1-2': { sys: 124, dia: 82, hr: 60, spo2: 100, etco2: 35, rr: 10, bt: 36.3, st: 0.0, rhythm: 'normal', tWaveInverted: false, selfBreathing: false, abpMode: false, dbpSync: true },
-                '2-1': { sys: 75,  dia: 50, hr: 62, spo2: 100, etco2: 31, rr: 10, bt: 36.2, st: 0.0, rhythm: 'normal', tWaveInverted: false, selfBreathing: false, abpMode: false, dbpSync: true },
-                '2-2': { sys: 102, dia: 68, hr: 75, spo2: 100, etco2: 33, rr: 10, bt: 36.2, st: 0.0, rhythm: 'normal', tWaveInverted: false, selfBreathing: false, abpMode: false, dbpSync: true },
-                '3-1': { sys: 81,  dia: 54, hr: 75, spo2: 100, etco2: 32, rr: 10, bt: 36.2, st: 0.0, rhythm: 'normal', tWaveInverted: false, selfBreathing: false, abpMode: false, dbpSync: true },
-                '3-2': { sys: 93,  dia: 62, hr: 78, spo2: 100, etco2: 34, rr: 10, bt: 36.1, st: 0.0, rhythm: 'normal', tWaveInverted: false, selfBreathing: false, abpMode: false, dbpSync: true },
-                '4-1': { sys: 132, dia: 88, hr: 81, spo2: 98,  etco2: 41, rr: 10, bt: 36.1, st: 0.0, rhythm: 'normal', tWaveInverted: false, selfBreathing: false, abpMode: false, dbpSync: true },
-                '4-2': { sys: 125, dia: 83, hr: 82, spo2: 100, etco2: 36, rr: 14, bt: 36.0, st: 0.0, rhythm: 'normal', tWaveInverted: false, selfBreathing: false, abpMode: false, dbpSync: true },
-                '5-1': { sys: 117, dia: 78, hr: 81, spo2: 99,  etco2: 39, etco2Pattern: 'curare', rr: 14, bt: 36.0, st: 0.0, rhythm: 'normal', tWaveInverted: false, selfBreathing: true, abpMode: false, dbpSync: true },
-                '5-2': { sys: 115, dia: 77, hr: 85, spo2: 100, etco2: 36, etco2Pattern: 'normal', rr: 14, bt: 36.0, st: 0.0, rhythm: 'normal', tWaveInverted: false, selfBreathing: false, abpMode: false, dbpSync: true },
-                '6-1': { sys: 152, dia: 101, hr: 75, spo2: 100, etco2: 30, rr: 14, bt: 36.0, st: 0.0, rhythm: 'normal', tWaveInverted: false, selfBreathing: false, abpMode: false, dbpSync: true },
-                '6-2': { sys: 93,  dia: 62, hr: 78, spo2: 100, etco2: 34, rr: 10, bt: 36.0, st: 0.0, rhythm: 'normal', tWaveInverted: false, selfBreathing: false, abpMode: false, dbpSync: true }
-            }
-        };
-
-        let customPresets = JSON.parse(localStorage.getItem('vvs_presets')) || DEFAULT_PRESET_SETS;
-        
-        const setSelect = document.getElementById('preset-set-select');
-        const stepSelect = document.getElementById('preset-step-select');
-
-        function renderPresetSelectors() {
-            setSelect.innerHTML = '';
-            Object.keys(customPresets).forEach(setName => {
-                const opt = document.createElement('option');
-                opt.value = setName;
-                opt.innerText = setName;
-                setSelect.appendChild(opt);
-            });
-            updateStepOptions();
-        }
-
-        function updateStepOptions() {
-            stepSelect.innerHTML = '';
-            const currentSet = customPresets[setSelect.value] || {};
-            Object.keys(currentSet).forEach(stepKey => {
-                const opt = document.createElement('option');
-                opt.value = stepKey;
-                opt.innerText = `단계 #${stepKey}`;
-                stepSelect.appendChild(opt);
-            });
-        }
-
-        setSelect.addEventListener('change', updateStepOptions);
-
-        document.getElementById('btn-load-preset').addEventListener('click', () => {
-            const setName = setSelect.value;
-            const stepKey = stepSelect.value;
-            const selected = customPresets[setName]?.[stepKey];
-
-            if (selected) {
-                Object.assign(state, selected);
-                
-                if (state.dbpSync) {
-                    applySysChange(state.sys);
-                }
-
-                DOM.ctrlSelfBreathing.checked = !!state.selfBreathing;
-                DOM.ctrlDbpSync.checked = !!state.dbpSync;
-                DOM.ctrlTWave.checked = !!state.tWaveInverted;
-                toggleABPMode(!!state.abpMode);
-                updateDisplay();
-                syncToFirebase(state);
-                checkAutoAlarms();
-            } else {
-                alert("선택된 프리셋 데이터가 없습니다.");
-            }
-        });
-
-        document.getElementById('btn-save-preset').addEventListener('click', () => {
-            const setName = setSelect.value;
-            const stepKey = stepSelect.value;
-
-            if (!confirm(`현재 모니터/컨트롤러의 수치를 [${setName}] 세트의 [단계 #${stepKey}]에 저장하시겠습니까?`)) return;
-
-            if (!customPresets[setName]) customPresets[setName] = {};
-
-            customPresets[setName][stepKey] = {
-                sys: state.sys,
-                dia: state.dia,
-                hr: state.hr,
-                spo2: state.spo2,
-                etco2: state.etco2,
-                rr: state.rr,
-                bt: state.bt,
-                st: state.st,
-                rhythm: state.rhythm || 'normal',
-                tWaveInverted: !!state.tWaveInverted,
-                selfBreathing: !!state.selfBreathing,
-                abpMode: !!state.abpMode,
-                dbpSync: !!state.dbpSync,
-                etco2Pattern: state.etco2Pattern || 'normal',
-                cleftDepth: state.cleftDepth || 0.4
-            };
-
-            localStorage.setItem('vvs_presets', JSON.stringify(customPresets));
-            alert(`[${setName} - #${stepKey}] 저장 완료되었습니다.`);
-        });
-
-        document.getElementById('btn-add-set').addEventListener('click', () => {
-            const newName = prompt("새로운 프리셋 세트 이름을 입력하세요 (예: THR_심폐관리, 회복실_저혈압 등):");
-            if (!newName || !newName.trim()) return;
-
-            const trimmed = newName.trim();
-            if (customPresets[trimmed]) {
-                alert("이미 존재하는 세트 이름입니다.");
-                return;
-            }
-
-            // 기본 1-1 ~ 6-2 템플릿 복사 생성
-            customPresets[trimmed] = {
-                '1-1': { ...state }, '1-2': { ...state },
-                '2-1': { ...state }, '2-2': { ...state },
-                '3-1': { ...state }, '3-2': { ...state },
-                '4-1': { ...state }, '4-2': { ...state },
-                '5-1': { ...state }, '5-2': { ...state },
-                '6-1': { ...state }, '6-2': { ...state }
-            };
-
-            localStorage.setItem('vvs_presets', JSON.stringify(customPresets));
-            renderPresetSelectors();
-            setSelect.value = trimmed;
-            updateStepOptions();
-        });
-
-        // 초기화 실행
-        renderPresetSelectors();
-        // ==========================================
 
         document.querySelectorAll('input[type="number"]').forEach(input => {
             input.addEventListener('keypress', function(e) {
@@ -1680,6 +2235,7 @@
         DOM.ctrlCleftDepth.oninput = (e) => { 
             state.cleftDepth = parseFloat(e.target.value); 
             DOM.inCleftDepth.value = state.cleftDepth; 
+            updateActivePhaseVitalsIfSelected();
             syncToFirebase({cleftDepth: state.cleftDepth}); 
         };
 
@@ -1691,10 +2247,12 @@
                 DOM.inDia.value = autoDia;
                 DOM.ctrlDia.value = autoDia;
             }
+            updateActivePhaseVitalsIfSelected();
         });
 
         DOM.ctrlTWave.addEventListener('change', (e) => { 
             state.tWaveInverted = e.target.checked; 
+            updateActivePhaseVitalsIfSelected();
             syncToFirebase({tWaveInverted: state.tWaveInverted}); 
             checkAutoAlarms();
         });
@@ -1702,6 +2260,7 @@
         DOM.btnToggleST.addEventListener('click', () => {
             state.tWaveInverted = !state.tWaveInverted;
             DOM.ctrlTWave.checked = state.tWaveInverted;
+            updateActivePhaseVitalsIfSelected();
             syncToFirebase({tWaveInverted: state.tWaveInverted});
             checkAutoAlarms();
         });
@@ -1723,21 +2282,25 @@
 
         DOM.ctrlABP.addEventListener('change', (e) => {
             toggleABPMode(e.target.checked);
+            updateActivePhaseVitalsIfSelected();
             syncToFirebase({abpMode: state.abpMode});
         });
 
         DOM.ctrlSelfBreathing.addEventListener('change', (e) => {
             state.selfBreathing = e.target.checked;
+            updateActivePhaseVitalsIfSelected();
             syncToFirebase({ selfBreathing: state.selfBreathing });
         });
         
         DOM.labelNBPTitle.addEventListener('click', () => {
             toggleABPMode(!state.abpMode);
+            updateActivePhaseVitalsIfSelected();
             syncToFirebase({abpMode: state.abpMode});
         });
 
         DOM.ctrlRhythm.addEventListener('change', (e) => {
             state.rhythm = e.target.value;
+            updateActivePhaseVitalsIfSelected();
             syncToFirebase({rhythm: state.rhythm});
             checkAutoAlarms();
         });
@@ -1750,6 +2313,7 @@
             if (nextIndex >= DOM.ctrlRhythm.options.length) nextIndex = DOM.ctrlRhythm.options.length - 1;
             DOM.ctrlRhythm.selectedIndex = nextIndex;
             state.rhythm = DOM.ctrlRhythm.value;
+            updateActivePhaseVitalsIfSelected();
             syncToFirebase({ rhythm: state.rhythm });
             checkAutoAlarms();
         }, { passive: false });
@@ -1757,6 +2321,7 @@
         DOM.ctrlEtco2Pattern.addEventListener('change', (e) => {
             state.etco2Pattern = e.target.value;
             updateDisplay();
+            updateActivePhaseVitalsIfSelected();
             syncToFirebase({ etco2Pattern: state.etco2Pattern });
         });
 
@@ -1769,6 +2334,7 @@
             DOM.ctrlEtco2Pattern.selectedIndex = nextIndex;
             state.etco2Pattern = DOM.ctrlEtco2Pattern.value;
             updateDisplay();
+            updateActivePhaseVitalsIfSelected();
             syncToFirebase({ etco2Pattern: state.etco2Pattern });
         }, { passive: false });
 
@@ -1820,6 +2386,7 @@
                     if (stateKey === 'sys') {
                         applySysChange(newValue);
                         updateDisplay();
+                        updateActivePhaseVitalsIfSelected();
                         syncToFirebase({ sys: state.sys, dia: state.dia });
                     } else if (stateKey === 'dia') {
                         state.dia = newValue;
@@ -1829,10 +2396,12 @@
                             syncToFirebase({dbpSync: false});
                         }
                         updateDisplay();
+                        updateActivePhaseVitalsIfSelected();
                         syncToFirebase({ dia: state.dia });
                     } else {
                         state[stateKey] = newValue;
                         updateDisplay();
+                        updateActivePhaseVitalsIfSelected();
                         syncToFirebase({ [stateKey]: newValue });
                     }
                     checkAutoAlarms();
@@ -1902,9 +2471,8 @@
 
         function triggerManualAlarm(boxElement) {
             if (!boxElement) return;
-            // 이미 애니메이션 중이면 클래스를 리셋해 다시 3회 깜빡이게 처리
             boxElement.classList.remove('alarm-active');
-            void boxElement.offsetWidth; // Reflow 트리거
+            void boxElement.offsetWidth;
             boxElement.classList.add('alarm-active');
             
             if (audioCtx && audioCtx.state === 'running' && !state.isMuted && (state.volume || 0) > 0) {
