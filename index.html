@@ -44,7 +44,7 @@
         }
 
         #monitor-handle {
-            position: absolute;
+            position: absolute; 
             top: 0;
             left: 0;
             width: 100%;
@@ -189,7 +189,7 @@
         }
 
         .wave-container {
-            flex: 1 1 0;      
+            flex: 1 1 0;     
             min-height: 0;    
             position: relative;
             border-bottom: 1px dashed rgba(255, 255, 255, 0.15); 
@@ -246,10 +246,12 @@
         .val-box:hover { border-color: rgba(255, 255, 255, 0.4); }
 
         .val-number { font-size: 9cqh !important; font-weight: bold; line-height: 1; text-align: center; }
-        .val-title { font-size: 2.8cqh !important; font-weight: bold; margin-bottom: 0.5cqh; text-align: center; }
+        .val-title { font-size: 2.5cqh !important; font-weight: bold; margin-bottom: 0.5cqh; text-align: center; }
 
-        #nbp-box-container .val-number { font-size: 6cqh !important; margin-top: 1cqh; }
-        #nbp-box-container .val-mean { font-size: 3.5cqh !important; font-weight: bold; margin-top: 0.5cqh; }
+        #nbp-box-container .val-number { font-size: 8cqh !important; margin-top: 1cqh; }
+        #nbp-box-container .val-mean { font-size: 6cqh !important; font-weight: bold; margin-top: 0.5cqh; }
+        #box-val-bt {flex: 0.6;}        
+        #box-val-bt .val-number { font-size: 6cqh !important; }
 
         .st-text { font-size: 3.2cqh; font-weight: bold; margin-top: 0.5cqh; }
 
@@ -311,6 +313,23 @@
         .control-group { display: flex; flex-direction: column; width: 100%; gap: 1px; min-width: 0; }
         .input-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1px; }
         .input-row label { font-size: 9.5px; margin: 0; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+        /* 🟢 컨트롤러 제목 라벨 알람 트리거 스타일 */
+        .ctrl-title-btn {
+            cursor: pointer;
+            transition: 0.15s ease;
+            user-select: none;
+            padding: 1px 3px;
+            border-radius: 3px;
+        }
+        .ctrl-title-btn:hover {
+            filter: brightness(1.4);
+            text-shadow: 0 0 6px currentColor;
+            background: rgba(255,255,255,0.08);
+        }
+        .ctrl-title-btn:active {
+            transform: scale(0.95);
+        }
 
         .slider-row {
             display: flex;
@@ -409,28 +428,93 @@
         .btn-improve { background-color: #005f73; color: #cceeff; }
         .btn-improve:hover { background-color: #0a9396; color: #ffffff; }
 
+        /* 🟢 알람 한계치 설정 패널 스타일 (기본 접힘) */
+        .alarm-limits-section {
+            margin-top: 4px;
+            padding: 5px 6px;
+            background: rgba(0,0,0,0.35);
+            border: 1px solid #444;
+            border-radius: 6px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .alarm-limits-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 11px;
+            font-weight: bold;
+            color: #ff9800;
+            cursor: pointer;
+        }
+        .alarm-limits-grid {
+            display: none; 
+            grid-template-columns: 1fr 1fr;
+            gap: 4px;
+            margin-top: 2px;
+        }
+        .alarm-limit-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #1e1e1e;
+            padding: 2px 4px;
+            border-radius: 4px;
+            border: 1px solid #333;
+        }
+        .alarm-limit-item label {
+            font-size: 9px;
+            font-weight: bold;
+        }
+        .alarm-limit-inputs {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+        }
+        .alarm-limit-inputs input {
+            width: 32px !important;
+            padding: 1px !important;
+            font-size: 9.5px !important;
+            cursor: ns-resize;
+        }
+
         /* 🟢 시나리오 섹션 스타일 */
         .scenario-section {
-            margin-top: 3px; padding-top: 3px; border-top: 1px dashed #555;
+            margin-top: 3px; padding-top: 5px; border-top: 1px dashed #555;
             display: flex; flex-direction: column; gap: 3px;
         }
-        .scenario-header { font-size: 11px; font-weight: bold; color: #ffeb3b; text-align: center; letter-spacing: 1px; }
-        .scenario-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; }
-
+        .scenario-header { font-size: 11px; font-weight: bold; color: #ffeb3b; }
+        
         .btn-scenario {
-            background-color: #333333; color: #e0e0e0; border: 1px solid #555;
-            border-radius: 4px; padding: 4px 2px; font-size: 10px; font-weight: bold;
+            border: 1px solid #555;
+            border-radius: 4px; padding: 5px 2px; font-size: 10px; font-weight: bold;
             cursor: pointer; transition: all 0.15s ease; text-align: center; white-space: nowrap;
         }
-        .btn-scenario:hover { background-color: #4a4a4a; color: #ffffff; border-color: #ffeb3b; box-shadow: 0 0 6px rgba(255, 235, 59, 0.4); }
+        .btn-scenario:hover { filter: brightness(1.2); box-shadow: 0 0 6px rgba(255, 255, 255, 0.2); }
         .btn-scenario:active { transform: scale(0.96); }
 
+        /* 🟢 Apply & Reset 버튼 나란히 배치 */
+        .action-btn-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px;
+            margin-top: 2px;
+        }
+
         #apply-btn {
-            margin-top: 2px; padding: 6px; font-size: 12px; background-color: #28a745; 
+            padding: 6px; font-size: 12px; background-color: #28a745; 
             color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;
-            width: 100%; transition: 0.2s;
+            transition: 0.2s;
         }
         #apply-btn:hover { background-color: #218838; }
+
+        #reset-btn {
+            padding: 6px; font-size: 12px; background-color: #ffc107; 
+            color: #000000; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;
+            transition: 0.2s;
+        }
+        #reset-btn:hover { background-color: #e0a800; }
 
         #start-overlay {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
@@ -492,7 +576,7 @@
                     <canvas id="canvas-spo2"></canvas>
                 </div>
                 <div class="wave-container">
-                    <span class="wave-label etco2-color">CO2 (EtCO2)</span>
+                    <span class="wave-label etco2-color">CO2 (EtCO2: <span id="label-etco2-type">Normal</span>)</span>
                     <canvas id="canvas-etco2"></canvas>
                 </div>
                 <div class="wave-container">
@@ -505,7 +589,7 @@
             <div id="values">
                 <div class="val-box ecg-color alarm-trigger" id="box-val-hr">
                     <div class="val-title">HR (bpm)</div>
-                    <div class="val-number scroll-val" id="val-hr" title="휠 조절">60</div>
+                    <div class="val-number scroll-val" id="val-hr" title="휠 조절">61</div>
                     <div class="st-text">
                         <span id="btn-toggle-st" class="click-toggle" title="클릭하여 T-Wave 역위 적용">ST</span> 
                         <span id="val-st" class="scroll-val" style="padding: 0 3px;" title="휠 조절">0.0</span>
@@ -519,7 +603,7 @@
 
                 <div class="val-box etco2-color alarm-trigger" id="box-val-etco2">
                     <div class="val-title">EtCO2</div>
-                    <div class="val-number scroll-val" id="val-etco2" title="휠 조절">35</div>
+                    <div class="val-number scroll-val" id="val-etco2" title="휠 조절">34</div>
                 </div>
 
                 <div class="val-box rr-color alarm-trigger" id="box-val-rr">
@@ -529,14 +613,14 @@
 
                 <div class="val-box bt-color alarm-trigger" id="box-val-bt">
                     <div class="val-title">BT (℃)</div>
-                    <div class="val-number scroll-val" id="val-bt" title="휠 조절">36.0</div>
+                    <div class="val-number scroll-val" id="val-bt" title="휠 조절">36.3</div>
                 </div>
 
                 <div class="val-box alarm-trigger" id="nbp-box-container" style="border-color: rgba(255,0,0,0.3);">
                     <div class="val-title click-toggle" id="label-nbp-title" title="클릭하여 NBP/ABP 전환" style="color: #ff0000;">NBP mmHg (2.5mins)</div>
                     <div class="val-number" style="color: #ff0000;">
-                        <span id="val-sys" class="scroll-val" title="휠 조절">120</span> / 
-                        <span id="val-dia" class="scroll-val" title="휠 조절">80</span>
+                        <span id="val-sys" class="scroll-val" title="휠 조절">121</span> / 
+                        <span id="val-dia" class="scroll-val" title="휠 조절">79</span>
                     </div>
                     <div class="val-mean" style="color: #ff0000;">(<span id="val-mean">93</span>)</div>
                 </div>
@@ -550,7 +634,6 @@
             <div style="display: flex; align-items: center; gap: 3px; flex-wrap: wrap; flex: 1; min-width: 0;">
                 <div class="panel-title" style="font-size: 12.5px;">Control Panel</div>
                 <div id="connection-status" style="font-size: 9.5px; font-weight: bold; color: #ff0000; padding: 1px 3px; border-radius: 3px; background: rgba(0,0,0,0.3);">Disconnected</div>
-                <!-- 🟢 상단 Start / Standby / Mute / Volume 버튼들 -->
                 <button id="btn-panel-start" class="panel-top-btn" style="background:#28a745; color:#fff;">Start</button>
                 <button id="btn-panel-standby" class="panel-top-btn" style="background:#ffc107; color:#000;">Stand by</button>
                 <button id="btn-panel-mute" class="panel-top-btn" style="background:#6c757d; color:#fff;">Mute</button>
@@ -578,27 +661,26 @@
                 <div class="controls-col">
                     <div class="control-group" style="color:#ff0000;">
                         <div class="input-row">
-                            <label>SBP (Sys):</label>
-                            <input type="number" id="input-sys" min="40" max="250" value="120" tabindex="1">
+                            <label class="ctrl-title-btn" data-alarm-target="nbp" title="클릭 시 모니터에 알람 3회 표출">SBP (Sys):</label>
+                            <input type="number" id="input-sys" min="10" max="300" value="121" tabindex="1">
                         </div>
                         <div class="slider-row">
                             <button class="step-btn minus" data-target="ctrl-sys" data-step="5">−</button>
-                            <input type="range" id="ctrl-sys" min="40" max="250" value="120" tabindex="-1">
+                            <input type="range" id="ctrl-sys" min="10" max="300" value="121" tabindex="-1">
                             <button class="step-btn plus" data-target="ctrl-sys" data-step="5">+</button>
                         </div>
                     </div>
                     
                     <div class="control-group" style="color:#ff0000;">
                         <div class="input-row">
-                            <label>DBP (Dia):</label>
-                            <input type="number" id="input-dia" min="20" max="180" value="80" tabindex="2">
+                            <label class="ctrl-title-btn" data-alarm-target="nbp" title="클릭 시 모니터에 알람 3회 표출">DBP (Dia):</label>
+                            <input type="number" id="input-dia" min="20" max="180" value="79" tabindex="2">
                         </div>
                         <div class="slider-row">
                             <button class="step-btn minus" data-target="ctrl-dia" data-step="5">−</button>
-                            <input type="range" id="ctrl-dia" min="20" max="180" value="80" tabindex="-1">
+                            <input type="range" id="ctrl-dia" min="20" max="180" value="79" tabindex="-1">
                             <button class="step-btn plus" data-target="ctrl-dia" data-step="5">+</button>
                         </div>
-                        <!-- 🟢 DBP Sync 옵션 -->
                         <label style="font-size: 9px; color: #aaa; display: flex; align-items: center; margin-top: 1px;">
                             <input type="checkbox" id="ctrl-dbp-sync" style="margin-right: 3px; cursor: pointer;" checked> DBP sync
                         </label>
@@ -606,19 +688,19 @@
 
                     <div class="control-group ecg-color">
                         <div class="input-row">
-                            <label>Heart Rate (HR):</label>
-                            <input type="number" id="input-hr" min="30" max="200" value="60" tabindex="3">
+                            <label class="ctrl-title-btn" data-alarm-target="hr" title="클릭 시 모니터에 알람 3회 표출">Heart Rate (HR):</label>
+                            <input type="number" id="input-hr" min="20" max="300" value="61" tabindex="3">
                         </div>
                         <div class="slider-row">
                             <button class="step-btn minus" data-target="ctrl-hr" data-step="3">−</button>
-                            <input type="range" id="ctrl-hr" min="30" max="200" value="60" tabindex="-1">
+                            <input type="range" id="ctrl-hr" min="20" max="300" value="61" tabindex="-1">
                             <button class="step-btn plus" data-target="ctrl-hr" data-step="3">+</button>
                         </div>
                     </div>
                     
                     <div class="control-group ecg-color">
                         <div class="input-row">
-                            <label>ST Level:</label>
+                            <label class="ctrl-title-btn" data-alarm-target="hr" title="클릭 시 모니터에 알람 3회 표출">ST Level:</label>
                             <input type="number" id="input-st" min="-3.0" max="6.0" step="0.1" value="0.0" tabindex="4">
                         </div>
                         <div class="slider-row">
@@ -633,67 +715,50 @@
                 <div class="controls-col">
                     <div class="control-group spo2-color">
                         <div class="input-row">
-                            <label>SpO2 (%):</label>
-                            <input type="number" id="input-spo2" min="50" max="100" value="100" tabindex="5">
+                            <label class="ctrl-title-btn" data-alarm-target="spo2" title="클릭 시 모니터에 알람 3회 표출">SpO2 (%):</label>
+                            <input type="number" id="input-spo2" min="20" max="100" value="100" tabindex="5">
                         </div>
                         <div class="slider-row">
                             <button class="step-btn minus" data-target="ctrl-spo2" data-step="1">−</button>
-                            <input type="range" id="ctrl-spo2" min="50" max="100" value="100" tabindex="-1">
+                            <input type="range" id="ctrl-spo2" min="20" max="100" value="100" tabindex="-1">
                             <button class="step-btn plus" data-target="ctrl-spo2" data-step="1">+</button>
                         </div>
                     </div>
 
                     <div class="control-group etco2-color">
                         <div class="input-row">
-                            <label>EtCO2:</label>
-                            <input type="number" id="input-etco2" min="10" max="80" value="35" tabindex="6">
+                            <label class="ctrl-title-btn" data-alarm-target="etco2" title="클릭 시 모니터에 알람 3회 표출">EtCO2:</label>
+                            <input type="number" id="input-etco2" min="1" max="100" value="34" tabindex="6">
                         </div>
                         <div class="slider-row">
                             <button class="step-btn minus" data-target="ctrl-etco2" data-step="1">−</button>
-                            <input type="range" id="ctrl-etco2" min="10" max="80" value="35" tabindex="-1">
+                            <input type="range" id="ctrl-etco2" min="1" max="100" value="34" tabindex="-1">
                             <button class="step-btn plus" data-target="ctrl-etco2" data-step="1">+</button>
                         </div>
                     </div>
 
                     <div class="control-group rr-color">
                         <div class="input-row">
-                            <label>Resp Rate (RR):</label>
-                            <input type="number" id="input-rr" min="5" max="60" value="10" tabindex="7">
+                            <label class="ctrl-title-btn" data-alarm-target="rr" title="클릭 시 모니터에 알람 3회 표출">Resp Rate (RR):</label>
+                            <input type="number" id="input-rr" min="2" max="40" value="10" tabindex="7">
                         </div>
                         <div class="slider-row">
                             <button class="step-btn minus" data-target="ctrl-rr" data-step="1">−</button>
-                            <input type="range" id="ctrl-rr" min="5" max="60" value="10" tabindex="-1">
+                            <input type="range" id="ctrl-rr" min="2" max="40" value="10" tabindex="-1">
                             <button class="step-btn plus" data-target="ctrl-rr" data-step="1">+</button>
                         </div>
                     </div>
 
                     <div class="control-group bt-color">
                         <div class="input-row">
-                            <label>Body Temp (BT):</label>
-                            <input type="number" id="input-bt" min="10.0" max="40.0" step="0.1" value="36.0" tabindex="8">
+                            <label class="ctrl-title-btn" data-alarm-target="bt" title="클릭 시 모니터에 알람 3회 표출">Body Temp (BT):</label>
+                            <input type="number" id="input-bt" min="30.0" max="45.0" step="0.1" value="36.3" tabindex="8">
                         </div>
                         <div class="slider-row">
                             <button class="step-btn minus" data-target="ctrl-bt" data-step="0.1">−</button>
-                            <input type="range" id="ctrl-bt" min="10.0" max="40.0" step="0.1" value="36.0" tabindex="-1">
+                            <input type="range" id="ctrl-bt" min="30.0" max="45.0" step="0.1" value="36.3" tabindex="-1">
                             <button class="step-btn plus" data-target="ctrl-bt" data-step="0.1">+</button>
                         </div>
-                    </div>
-                </div>
-                
-                <!-- ⚡ ECG 리듬 선택 -->
-                <div class="control-group" style="grid-column: 1 / -1; margin-top: 1px;">
-                    <div class="input-row">
-                        <label class="ecg-color" style="font-size:10.5px; font-weight:bold;">ECG Rhythm:</label>
-                        <select id="ctrl-rhythm" style="background:#111; color:#00ff00; border:1px solid #555; padding:2px 4px; border-radius:4px; width:68%; font-weight:bold; cursor:pointer; font-size:10px;">
-                            <option value="normal">Normal Sinus</option>
-                            <option value="pvc">Occasional PVC</option>
-                            <option value="bigeminy">Bigeminy PVC</option>
-                            <option value="trigeminy">Trigeminy PVC</option>
-                            <option value="afib">A-Fib</option>
-                            <option value="aflutter">A-Flutter</option>
-                            <option value="vt">V-Tach (VT)</option>
-                            <option value="vf">V-Fib (VF)</option>
-                        </select>
                     </div>
                 </div>
             </div>
@@ -725,40 +790,145 @@
                 </button>
             </div>
 
-            <!-- 🟢 [RC] 시나리오 원클릭 프리셋 영역 -->
-            <div class="scenario-section">
-                <div class="scenario-header">[RC]</div>
-                <div class="scenario-grid">
-                    <button type="button" class="btn-scenario" onclick="applyRCPreset('1-1')">#1-1</button>
-                    <button type="button" class="btn-scenario" onclick="applyRCPreset('1-2')">#1-2</button>
-                    <button type="button" class="btn-scenario" onclick="applyRCPreset('2-1')">#2-1</button>
-                    <button type="button" class="btn-scenario" onclick="applyRCPreset('2-2')">#2-2</button>
-                    <button type="button" class="btn-scenario" onclick="applyRCPreset('3-1')">#3-1</button>
-                    <button type="button" class="btn-scenario" onclick="applyRCPreset('3-2')">#3-2</button>
-                    <button type="button" class="btn-scenario" onclick="applyRCPreset('4-1')">#4-1</button>
-                    <button type="button" class="btn-scenario" onclick="applyRCPreset('4-2')">#4-2</button>
-                    <button type="button" class="btn-scenario" onclick="applyRCPreset('5')">#5</button>
+            <!-- 🟢 Apply & Reset 버튼 -->
+            <div class="action-btn-group">
+                <button id="apply-btn" tabindex="12"> Apply </button>
+                <button id="reset-btn" type="button"> Reset </button>
+            </div>
+
+            <!-- ⚡ ECG 리듬 선택 -->
+            <div class="control-group" style="margin-top: 2px;">
+                <div class="input-row">
+                    <label class="ecg-color" style="font-size:10.5px; font-weight:bold;">ECG Rhythm:</label>
+                    <select id="ctrl-rhythm" style="background:#111; color:#00ff00; border:1px solid #555; padding:3px 4px; border-radius:4px; width:68%; font-weight:bold; cursor:pointer; font-size:10px;">
+                        <option value="normal">Normal Sinus</option>
+                        <option value="pvc">Occasional PVC</option>
+                        <option value="bigeminy">Bigeminy PVC</option>
+                        <option value="trigeminy">Trigeminy PVC</option>
+                        <option value="afib">A-Fib</option>
+                        <option value="aflutter">A-Flutter</option>
+                        <option value="vt">V-Tach (VT)</option>
+                        <option value="vf">V-Fib (VF)</option>
+                    </select>
                 </div>
             </div>
 
-            <!-- 🟢 [THRA] 시나리오 원클릭 프리셋 영역 -->
-            <div class="scenario-section">
-                <div class="scenario-header">[THRA]</div>
-                <div class="scenario-grid">
-                    <button type="button" class="btn-scenario" onclick="applyTHRAPreset('1-1')">#1-1</button>
-                    <button type="button" class="btn-scenario" onclick="applyTHRAPreset('1-2')">#1-2</button>
-                    <button type="button" class="btn-scenario" onclick="applyTHRAPreset('2')">#2</button>
-                    <button type="button" class="btn-scenario" onclick="applyTHRAPreset('3')">#3</button>
-                    <button type="button" class="btn-scenario" onclick="applyTHRAPreset('4')">#4</button>
-                    <button type="button" class="btn-scenario" onclick="applyTHRAPreset('5')">#5</button>
-                    <button type="button" class="btn-scenario" onclick="applyTHRAPreset('6')">#6</button>
-                    <button type="button" class="btn-scenario" onclick="applyTHRAPreset('7')">#7</button>
-                    <button type="button" class="btn-scenario" onclick="applyTHRAPreset('8')">#8</button>
-                    <button type="button" class="btn-scenario" onclick="applyTHRAPreset('9')">#9</button>
+            <!-- 🟢 EtCO2 파형 드롭다운 -->
+            <div class="control-group etco2-color" style="margin-top: 3px; border-top: 1px dashed #555; padding-top: 4px;">
+                <div class="input-row">
+                    <label style="font-size:10.5px; font-weight:bold;">EtCO2 Waveform:</label>
+                    <select id="ctrl-etco2-pattern" style="background:#111; color:#ffffff; border:1px solid #555; padding:3px 4px; border-radius:4px; width:68%; font-weight:bold; cursor:pointer; font-size:10px;">
+                        <option value="normal">Normal (Square)</option>
+                        <option value="curare">Curare Cleft</option>
+                        <option value="ineffective">Trigger Delay / Ineffective</option>
+                        <option value="autotrigger">Auto-Triggering</option>
+                        <option value="doubletrigger">Premature / Double Trigger</option>
+                        <option value="fighting">Delayed Cycling / Fighting</option>
+                        <option value="sharkfin">Shark Fin (Obstruction)</option>
+                    </select>
                 </div>
             </div>
 
-            <button id="apply-btn" tabindex="12"> Apply </button>
+            <!-- Curare Cleft 세부 조절 -->
+            <div class="control-group etco2-color" id="group-cleft-depth" style="display: none; margin-top: 2px;">
+                <div class="input-row">
+                    <label>Cleft Depth (0.1~0.8):</label>
+                    <input type="number" id="input-cleft-depth" min="0.1" max="0.8" step="0.1" value="0.4">
+                </div>
+                <div class="slider-row">
+                    <input type="range" id="ctrl-cleft-depth" min="0.1" max="0.8" step="0.05" value="0.4">
+                </div>
+            </div>
+
+            <!-- 🟢 [Alarm Limits Configuration] 조절 서브패널 (접이식 default) -->
+            <div class="alarm-limits-section">
+                <div class="alarm-limits-header" id="btn-toggle-limits">
+                    <span>⚙️ Alarm Limits (Low / High)</span>
+                    <span id="label-limits-arrow">▲</span>
+                </div>
+                <div class="alarm-limits-grid" id="alarm-limits-body">
+                    <!-- SBP -->
+                    <div class="alarm-limit-item" style="color:#ff0000;">
+                        <label>SBP</label>
+                        <div class="alarm-limit-inputs">
+                            <input type="number" id="limit-sys-low" value="90" step="1">
+                            <span>-</span>
+                            <input type="number" id="limit-sys-high" value="150" step="1">
+                        </div>
+                    </div>
+                    <!-- HR -->
+                    <div class="alarm-limit-item ecg-color">
+                        <label>HR</label>
+                        <div class="alarm-limit-inputs">
+                            <input type="number" id="limit-hr-low" value="50" step="1">
+                            <span>-</span>
+                            <input type="number" id="limit-hr-high" value="120" step="1">
+                        </div>
+                    </div>
+                    <!-- ST -->
+                    <div class="alarm-limit-item ecg-color">
+                        <label>ST (mV)</label>
+                        <div class="alarm-limit-inputs">
+                            <input type="number" id="limit-st-dep" step="0.1" value="-1.0">
+                            <span>-</span>
+                            <input type="number" id="limit-st-elev" step="0.1" value="2.0">
+                        </div>
+                    </div>
+                    <!-- SpO2 -->
+                    <div class="alarm-limit-item spo2-color">
+                        <label>SpO2 (≥)</label>
+                        <div class="alarm-limit-inputs">
+                            <input type="number" id="limit-spo2-low" value="95" step="1">
+                        </div>
+                    </div>
+                    <!-- EtCO2 -->
+                    <div class="alarm-limit-item etco2-color">
+                        <label>EtCO2</label>
+                        <div class="alarm-limit-inputs">
+                            <input type="number" id="limit-etco2-low" value="30" step="1">
+                            <span>-</span>
+                            <input type="number" id="limit-etco2-high" value="50" step="1">
+                        </div>
+                    </div>
+                    <!-- RR -->
+                    <div class="alarm-limit-item rr-color">
+                        <label>RR</label>
+                        <div class="alarm-limit-inputs">
+                            <input type="number" id="limit-rr-low" value="8" step="1">
+                            <span>-</span>
+                            <input type="number" id="limit-rr-high" value="30" step="1">
+                        </div>
+                    </div>
+                    <!-- BT -->
+                    <div class="alarm-limit-item bt-color" style="grid-column: 1 / -1;">
+                        <label>BT (℃)</label>
+                        <div class="alarm-limit-inputs">
+                            <input type="number" id="limit-bt-low" step="0.1" value="35.5">
+                            <span>-</span>
+                            <input type="number" id="limit-bt-high" step="0.1" value="37.5">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 🟢 [동적 시나리오 프리셋] 영역 교체됨 -->
+            <div class="scenario-section">
+                <div class="scenario-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 3px;">
+                    <span>[시나리오 프리셋 관리]</span>
+                    <button type="button" id="btn-add-set" style="font-size: 9px; padding: 2px 5px; background: #444; color: #fff; border: 1px solid #777; border-radius: 3px; cursor: pointer;">+ 세트 추가</button>
+                </div>
+                
+                <div style="display: flex; gap: 4px; margin-top: 2px;">
+                    <select id="preset-set-select" style="flex: 1.2; background: #111; color: #ffeb3b; border: 1px solid #555; padding: 3px; border-radius: 4px; font-size: 10px; font-weight: bold; outline: none; cursor: pointer;"></select>
+                    <select id="preset-step-select" style="flex: 1; background: #111; color: #fff; border: 1px solid #555; padding: 3px; border-radius: 4px; font-size: 10px; font-weight: bold; outline: none; cursor: pointer;"></select>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 4px; margin-top: 4px;">
+                    <button type="button" id="btn-load-preset" class="btn-scenario" style="background: #005f73; color: #fff;">불러오기 (적용)</button>
+                    <button type="button" id="btn-save-preset" class="btn-scenario" style="background: #6a040f; color: #ffcccc;">현재상태 저장</button>
+                </div>
+            </div>
+
         </div>
     </div>
 
@@ -800,12 +970,24 @@
         let sessionId = urlParams.get('session');
         let role = urlParams.get('role');
 
-        let state = {
-            bt: 36.0, hr: 60, spo2: 100, etco2: 35, rr: 10,
-            sys: 120, dia: 80, st: 0.0, tWaveInverted: false, abpMode: false,
+        const DEFAULT_INITIAL_STATE = {
+            bt: 36.3, hr: 61, spo2: 100, etco2: 34, rr: 10,
+            sys: 121, dia: 79, st: 0.0, tWaveInverted: false, abpMode: false,
             selfBreathing: false, rhythm: 'normal', dbpSync: true,
-            isMuted: false, volume: 100, monitorStatus: 'standby'
+            etco2Pattern: 'normal', cleftDepth: 0.4,
+            isMuted: false, volume: 100, monitorStatus: 'standby',
+            limits: {
+                sysLow: 90, sysHigh: 150,
+                hrLow: 50, hrHigh: 120,
+                stDep: -1.0, stElev: 2.0,
+                spo2Low: 95,
+                etco2Low: 30, etco2High: 50,
+                rrLow: 8, rrHigh: 30,
+                btLow: 35.5, btHigh: 37.5
+            }
         };
+
+        let state = JSON.parse(JSON.stringify(DEFAULT_INITIAL_STATE));
 
         let lastAlarmStatus = {
             sys: false, hr: false, stDep: false, stElev: false, tInv: false,
@@ -826,7 +1008,7 @@
             boxValNBP: document.getElementById('nbp-box-container'),
 
             labelWaveRR: document.getElementById('label-wave-rr'), labelNBPTitle: document.getElementById('label-nbp-title'),
-            labelValRR: document.getElementById('label-val-rr'),
+            labelValRR: document.getElementById('label-val-rr'), labelEtco2Type: document.getElementById('label-etco2-type'),
             rhythmLabel: document.getElementById('rhythm-label'), sessionDisplay: document.getElementById('session-display'),
             
             ctrlBT: document.getElementById('ctrl-bt'), ctrlHR: document.getElementById('ctrl-hr'),
@@ -836,6 +1018,10 @@
             ctrlABP: document.getElementById('ctrl-abp'), ctrlTWave: document.getElementById('ctrl-twave'), 
             ctrlSelfBreathing: document.getElementById('ctrl-self-breathing'),
             ctrlRhythm: document.getElementById('ctrl-rhythm'),
+            ctrlEtco2Pattern: document.getElementById('ctrl-etco2-pattern'),
+            ctrlCleftDepth: document.getElementById('ctrl-cleft-depth'),
+            inCleftDepth: document.getElementById('input-cleft-depth'),
+            groupCleftDepth: document.getElementById('group-cleft-depth'),
             ctrlDbpSync: document.getElementById('ctrl-dbp-sync'),
             ctrlVolume: document.getElementById('ctrl-volume'),
             
@@ -844,8 +1030,20 @@
             inRR: document.getElementById('input-rr'), inSys: document.getElementById('input-sys'),
             inDia: document.getElementById('input-dia'), inST: document.getElementById('input-st'),
             
+            limSysLow: document.getElementById('limit-sys-low'), limSysHigh: document.getElementById('limit-sys-high'),
+            limHrLow: document.getElementById('limit-hr-low'), limHrHigh: document.getElementById('limit-hr-high'),
+            limStDep: document.getElementById('limit-st-dep'), limStElev: document.getElementById('limit-st-elev'),
+            limSpo2Low: document.getElementById('limit-spo2-low'),
+            limEtco2Low: document.getElementById('limit-etco2-low'), limEtco2High: document.getElementById('limit-etco2-high'),
+            limRrLow: document.getElementById('limit-rr-low'), limRrHigh: document.getElementById('limit-rr-high'),
+            limBtLow: document.getElementById('limit-bt-low'), limBtHigh: document.getElementById('limit-bt-high'),
+            btnToggleLimits: document.getElementById('btn-toggle-limits'),
+            alarmLimitsBody: document.getElementById('alarm-limits-body'),
+            labelLimitsArrow: document.getElementById('label-limits-arrow'),
+
             btnStart: document.getElementById('start-btn'), btnStandby: document.getElementById('standby-btn'),
             overlay: document.getElementById('start-overlay'), btnApply: document.getElementById('apply-btn'),
+            btnReset: document.getElementById('reset-btn'),
             btnToggleST: document.getElementById('btn-toggle-st'),
             btnWorsen: document.getElementById('btn-worsen'),
             btnImprove: document.getElementById('btn-improve'),
@@ -875,17 +1073,18 @@
         // 🟢 정상 범위 초과 감지 및 자동 알람 함수
         function checkAutoAlarms() {
             if (currentMonitorStatus !== 'running') return;
+            const lim = state.limits || DEFAULT_INITIAL_STATE.limits;
 
-            const isSysAbnormal = (state.sys < 90 || state.sys > 160);
-            const isHrAbnormal = (state.hr < 50 || state.hr > 120);
-            const isStDepAbnormal = (state.st <= -1.0);
-            const isStElevAbnormal = (state.st >= 2.0);
+            const isSysAbnormal = (state.sys < lim.sysLow || state.sys > lim.sysHigh);
+            const isHrAbnormal = (state.hr < lim.hrLow || state.hr > lim.hrHigh);
+            const isStDepAbnormal = (state.st <= lim.stDep);
+            const isStElevAbnormal = (state.st >= lim.stElev);
             const isTInvAbnormal = Boolean(state.tWaveInverted);
 
-            const isSpo2Abnormal = (state.spo2 < 95);
-            const isEtco2Abnormal = (state.etco2 < 30 || state.etco2 > 40);
-            const isRrAbnormal = (state.rr < 6 || state.rr > 30);
-            const isBtAbnormal = (state.bt < 35.0 || state.bt > 37.5);
+            const isSpo2Abnormal = (state.spo2 < lim.spo2Low);
+            const isEtco2Abnormal = (state.etco2 < lim.etco2Low || state.etco2 > lim.etco2High);
+            const isRrAbnormal = (state.rr < lim.rrLow || state.rr > lim.rrHigh);
+            const isBtAbnormal = (state.bt < lim.btLow || state.bt > lim.btHigh);
             const isRhythmAbnormal = (state.rhythm !== 'normal');
 
             if (isSysAbnormal && !lastAlarmStatus.sys) triggerManualAlarm(DOM.boxValNBP);
@@ -937,9 +1136,32 @@
                 renderQRCode();
             }
 
+            // 🟢 Firebase 알람 이벤트 수신 (원격 컨트롤러 트리거 지원)
+            currentSessionRef.child('alarmTrigger').on('value', (snap) => {
+                const triggerData = snap.val();
+                if (!triggerData || !triggerData.target) return;
+                
+                // 3초 이내에 전송된 알람만 처리하여 재접속 시 이전 알람 중복 실행 방지
+                if (Date.now() - triggerData.timestamp < 3000) {
+                    const targetBoxes = {
+                        nbp: DOM.boxValNBP,
+                        hr: DOM.boxValHR,
+                        spo2: DOM.boxValSpO2,
+                        etco2: DOM.boxValEtCO2,
+                        rr: DOM.boxValRR,
+                        bt: DOM.boxValBT
+                    };
+                    const targetEl = targetBoxes[triggerData.target];
+                    if (targetEl) triggerManualAlarm(targetEl);
+                }
+            });
+
             currentSessionRef.on('value', (snapshot) => {
                 if (snapshot.exists()) {
                     state = Object.assign(state, snapshot.val());
+                    if (!state.limits) {
+                        state.limits = JSON.parse(JSON.stringify(DEFAULT_INITIAL_STATE.limits));
+                    }
                     updateDisplay();
                     
                     DOM.ctrlTWave.checked = !!state.tWaveInverted;
@@ -947,6 +1169,9 @@
                     DOM.ctrlSelfBreathing.checked = !!state.selfBreathing;
                     DOM.ctrlDbpSync.checked = (state.dbpSync !== undefined) ? !!state.dbpSync : true;
                     DOM.ctrlRhythm.value = state.rhythm || 'normal';
+                    DOM.ctrlEtco2Pattern.value = state.etco2Pattern || 'normal';
+                    DOM.ctrlCleftDepth.value = state.cleftDepth || 0.4;
+                    DOM.inCleftDepth.value = state.cleftDepth || 0.4;
 
                     if (DOM.ctrlVolume.value != state.volume) DOM.ctrlVolume.value = state.volume;
 
@@ -956,6 +1181,13 @@
                     else if(state.rhythm === 'aflutter') DOM.rhythmLabel.innerText = "A-Flutter";
                     else DOM.rhythmLabel.innerText = "lead II";
 
+                    const patternNames = {
+                        normal: 'Normal', curare: 'Curare Cleft', ineffective: 'Ineffective Trigger',
+                        autotrigger: 'Auto-Triggering', doubletrigger: 'Double Trigger',
+                        fighting: 'Fighting', sharkfin: 'Shark Fin'
+                    };
+                    DOM.labelEtco2Type.innerText = patternNames[state.etco2Pattern] || 'Normal';
+
                     if (state.abpMode) {
                         DOM.labelWaveRR.innerText = "ABP"; DOM.labelWaveRR.style.color = "#ff0000"; 
                         DOM.labelNBPTitle.innerText = "ABP mmHg";
@@ -964,7 +1196,6 @@
                         DOM.labelNBPTitle.innerText = "NBP mmHg (2.5mins)";
                     }
 
-                    // 🟢 모니터 원격 On/Off(Stand by) 동기화 확실히 보장
                     if (state.monitorStatus === 'running') {
                         if (currentMonitorStatus !== 'running') {
                             startMonitorLocal();
@@ -1026,6 +1257,9 @@
         }
         connectSession(sessionId);
 
+        // ==========================================
+        // 3. 화면 UI 표시 및 Apply 분리 로직
+        // ==========================================
         function updateDisplay() {
             DOM.valBT.innerText = parseFloat(state.bt).toFixed(1);
             DOM.valHR.innerText = state.hr;
@@ -1040,20 +1274,44 @@
             let diaValue = parseInt(state.dia);
             document.getElementById('val-mean').innerText = Math.round((sysValue + 2 * diaValue) / 3);
     
-            DOM.inBT.value = parseFloat(state.bt).toFixed(1);
-            DOM.inHR.value = state.hr;
-            DOM.inSpO2.value = state.spo2;
-            DOM.inEtCO2.value = state.etco2;
-            DOM.inRR.value = state.rr;
-            DOM.inSys.value = state.sys;
-            DOM.inDia.value = state.dia;
-            DOM.inST.value = parseFloat(state.st).toFixed(1);
+            const activeId = document.activeElement ? document.activeElement.id : '';
+            const vitalInputIds = ['input-bt', 'input-hr', 'input-spo2', 'input-etco2', 'input-rr', 'input-sys', 'input-dia', 'input-st'];
+            
+            if (!vitalInputIds.includes(activeId)) {
+                DOM.inBT.value = parseFloat(state.bt).toFixed(1);
+                DOM.inHR.value = state.hr;
+                DOM.inSpO2.value = state.spo2;
+                DOM.inEtCO2.value = state.etco2;
+                DOM.inRR.value = state.rr;
+                DOM.inSys.value = state.sys;
+                DOM.inDia.value = state.dia;
+                DOM.inST.value = parseFloat(state.st).toFixed(1);
 
-            DOM.ctrlBT.value = state.bt; DOM.ctrlHR.value = state.hr;
-            DOM.ctrlSpO2.value = state.spo2; DOM.ctrlEtCO2.value = state.etco2;
-            DOM.ctrlRR.value = state.rr; DOM.ctrlSys.value = state.sys;
-            DOM.ctrlDia.value = state.dia; DOM.ctrlST.value = state.st;
+                DOM.ctrlBT.value = state.bt; 
+                DOM.ctrlHR.value = state.hr;
+                DOM.ctrlSpO2.value = state.spo2; 
+                DOM.ctrlEtCO2.value = state.etco2;
+                DOM.ctrlRR.value = state.rr; 
+                DOM.ctrlSys.value = state.sys;
+                DOM.ctrlDia.value = state.dia; 
+                DOM.ctrlST.value = state.st;
+            }
+
             DOM.ctrlDbpSync.checked = !!state.dbpSync;
+            DOM.ctrlEtco2Pattern.value = state.etco2Pattern || 'normal';
+            DOM.ctrlCleftDepth.value = state.cleftDepth || 0.4;
+            DOM.inCleftDepth.value = state.cleftDepth || 0.4;
+            DOM.groupCleftDepth.style.display = state.etco2Pattern === 'curare' ? 'flex' : 'none';
+
+            if (state.limits) {
+                DOM.limSysLow.value = state.limits.sysLow; DOM.limSysHigh.value = state.limits.sysHigh;
+                DOM.limHrLow.value = state.limits.hrLow; DOM.limHrHigh.value = state.limits.hrHigh;
+                DOM.limStDep.value = state.limits.stDep.toFixed(1); DOM.limStElev.value = state.limits.stElev.toFixed(1);
+                DOM.limSpo2Low.value = state.limits.spo2Low;
+                DOM.limEtco2Low.value = state.limits.etco2Low; DOM.limEtco2High.value = state.limits.etco2High;
+                DOM.limRrLow.value = state.limits.rrLow; DOM.limRrHigh.value = state.limits.rrHigh;
+                DOM.limBtLow.value = state.limits.btLow.toFixed(1); DOM.limBtHigh.value = state.limits.btHigh.toFixed(1);
+            }
 
             if (muteMsg) muteMsg.style.display = state.isMuted ? 'block' : 'none';
             if (state.isMuted) {
@@ -1069,13 +1327,119 @@
             if (currentSessionRef) currentSessionRef.update(updates);
         }
 
+        // 🟢 원격/로컬 공용 알람 트리거 함수
+        function triggerManualAlarmRemote(targetKey) {
+            const targetBoxes = {
+                nbp: DOM.boxValNBP,
+                hr: DOM.boxValHR,
+                spo2: DOM.boxValSpO2,
+                etco2: DOM.boxValEtCO2,
+                rr: DOM.boxValRR,
+                bt: DOM.boxValBT
+            };
+            const targetEl = targetBoxes[targetKey];
+            if (targetEl) triggerManualAlarm(targetEl);
+
+            if (currentSessionRef) {
+                currentSessionRef.child('alarmTrigger').set({
+                    target: targetKey,
+                    timestamp: Date.now()
+                });
+            }
+        }
+
+        // 🟢 컨트롤러 라벨(수치 제목) 클릭 시 알람 트리거 리스너 등록
+        document.querySelectorAll('.ctrl-title-btn').forEach(label => {
+            label.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const targetKey = label.getAttribute('data-alarm-target');
+                if (targetKey) {
+                    triggerManualAlarmRemote(targetKey);
+                }
+            });
+        });
+
         function applySysChange(newSys) {
-            state.sys = Math.max(40, Math.min(250, newSys));
+            state.sys = Math.max(10, Math.min(300, newSys));
             if (state.dbpSync) {
                 state.dia = Math.max(20, Math.min(180, Math.round(state.sys * 2 / 3)));
                 DOM.ctrlDia.value = state.dia;
             }
         }
+
+        function updateLocalControl(name, value, isFloat = false) {
+            let val = isFloat ? parseFloat(value) : parseInt(value);
+            if (isNaN(val)) return;
+
+            const map = {
+                sys: { input: DOM.inSys, slider: DOM.ctrlSys, min: 10, max: 300 },
+                dia: { input: DOM.inDia, slider: DOM.ctrlDia, min: 20, max: 180 },
+                hr:  { input: DOM.inHR,  slider: DOM.ctrlHR,  min: 20, max: 300 },
+                st:  { input: DOM.inST,  slider: DOM.ctrlST,  min: -3.0, max: 6.0 },
+                spo2:{ input: DOM.inSpO2,slider: DOM.ctrlSpO2,min: 20, max: 100 },
+                etco2:{input: DOM.inEtCO2,slider: DOM.ctrlEtCO2,min: 1, max: 100 },
+                rr:  { input: DOM.inRR,  slider: DOM.ctrlRR,  min: 2, max: 40 },
+                bt:  { input: DOM.inBT,  slider: DOM.ctrlBT,  min: 30.0, max: 45.0 }
+            };
+
+            const item = map[name];
+            if (!item) return;
+
+            val = Math.max(item.min, Math.min(item.max, val));
+            const formatted = isFloat ? val.toFixed(1) : Math.round(val);
+
+            item.input.value = formatted;
+            item.slider.value = formatted;
+
+            if (name === 'sys' && DOM.ctrlDbpSync.checked) {
+                const autoDia = Math.max(20, Math.min(180, Math.round(val * 2 / 3)));
+                DOM.inDia.value = autoDia;
+                DOM.ctrlDia.value = autoDia;
+            }
+        }
+
+        function attachLimitInputEvent(inputElement, limitKey, isFloat = false) {
+            inputElement.addEventListener('change', () => {
+                const val = isFloat ? parseFloat(inputElement.value) : parseInt(inputElement.value);
+                if (!isNaN(val)) {
+                    if (!state.limits) state.limits = {};
+                    state.limits[limitKey] = val;
+                    syncToFirebase({ limits: state.limits });
+                    checkAutoAlarms();
+                }
+            });
+        }
+        attachLimitInputEvent(DOM.limSysLow, 'sysLow'); attachLimitInputEvent(DOM.limSysHigh, 'sysHigh');
+        attachLimitInputEvent(DOM.limHrLow, 'hrLow'); attachLimitInputEvent(DOM.limHrHigh, 'hrHigh');
+        attachLimitInputEvent(DOM.limStDep, 'stDep', true); attachLimitInputEvent(DOM.limStElev, 'stElev', true);
+        attachLimitInputEvent(DOM.limSpo2Low, 'spo2Low');
+        attachLimitInputEvent(DOM.limEtco2Low, 'etco2Low'); attachLimitInputEvent(DOM.limEtco2High, 'etco2High');
+        attachLimitInputEvent(DOM.limRrLow, 'rrLow'); attachLimitInputEvent(DOM.limRrHigh, 'rrHigh');
+        attachLimitInputEvent(DOM.limBtLow, 'btLow', true); attachLimitInputEvent(DOM.limBtHigh, 'btHigh', true);
+
+        document.querySelectorAll('.alarm-limit-inputs input').forEach(input => {
+            input.addEventListener('wheel', function(e) {
+                e.preventDefault();
+                const direction = e.deltaY < 0 ? 1 : -1;
+                const step = parseFloat(this.getAttribute('step')) || 1;
+                let val = parseFloat(this.value);
+                if (isNaN(val)) val = 0;
+                
+                let newValue = val + (direction * step);
+                this.value = step < 1 ? newValue.toFixed(1) : Math.round(newValue);
+                this.dispatchEvent(new Event('change'));
+            }, { passive: false });
+        });
+
+        DOM.btnToggleLimits.addEventListener('click', () => {
+            if (DOM.alarmLimitsBody.style.display === 'grid') {
+                DOM.alarmLimitsBody.style.display = 'none';
+                DOM.labelLimitsArrow.innerText = '▲';
+            } else {
+                DOM.alarmLimitsBody.style.display = 'grid';
+                DOM.labelLimitsArrow.innerText = '▼';
+            }
+        });
 
         DOM.btnApply.addEventListener('click', () => {
             state.bt = parseFloat(DOM.inBT.value) || state.bt; 
@@ -1084,7 +1448,9 @@
             state.spo2 = parseInt(DOM.inSpO2.value) || state.spo2;
             state.etco2 = parseInt(DOM.inEtCO2.value) || state.etco2; 
             state.rr = parseInt(DOM.inRR.value) || state.rr;
-            
+            state.cleftDepth = parseFloat(DOM.inCleftDepth.value) || state.cleftDepth;
+            state.dbpSync = DOM.ctrlDbpSync.checked;
+
             applySysChange(parseInt(DOM.inSys.value) || state.sys);
             if (!state.dbpSync) {
                 state.dia = parseInt(DOM.inDia.value) || state.dia;
@@ -1095,80 +1461,176 @@
             checkAutoAlarms();
         });
 
-        // 🟢 Worsening Condition
+        DOM.btnReset.addEventListener('click', () => {
+            const currentStatus = state.monitorStatus;
+            const currentVol = state.volume;
+            const currentMuted = state.isMuted;
+
+            state = JSON.parse(JSON.stringify(DEFAULT_INITIAL_STATE));
+            state.monitorStatus = currentStatus;
+            state.volume = currentVol;
+            state.isMuted = currentMuted;
+
+            DOM.ctrlSelfBreathing.checked = state.selfBreathing;
+            DOM.ctrlDbpSync.checked = state.dbpSync;
+            DOM.ctrlTWave.checked = state.tWaveInverted;
+            toggleABPMode(state.abpMode);
+
+            updateDisplay();
+            syncToFirebase(state);
+            checkAutoAlarms();
+        });
+
         DOM.btnWorsen.addEventListener('click', () => {
             applySysChange(parseInt(state.sys) - 5);
-            state.hr = Math.max(60, Math.min(120, parseInt(state.hr) + 2));
-            state.etco2 = Math.max(28, Math.min(38, parseInt(state.etco2) - 1));
+            state.hr = Math.max(20, Math.min(300, parseInt(state.hr) + 2));
+            state.etco2 = Math.max(1, Math.min(100, parseInt(state.etco2) - 1));
             updateDisplay();
             syncToFirebase({ sys: state.sys, dia: state.dia, hr: state.hr, etco2: state.etco2 });
             checkAutoAlarms();
         });
 
-        // 🟢 Improving Condition
         DOM.btnImprove.addEventListener('click', () => {
             applySysChange(parseInt(state.sys) + 5);
-            state.hr = Math.max(60, Math.min(120, parseInt(state.hr) - 2));
-            state.etco2 = Math.max(28, Math.min(38, parseInt(state.etco2) + 1));
+            state.hr = Math.max(20, Math.min(300, parseInt(state.hr) - 2));
+            state.etco2 = Math.max(1, Math.min(100, parseInt(state.etco2) + 1));
             updateDisplay();
             syncToFirebase({ sys: state.sys, dia: state.dia, hr: state.hr, etco2: state.etco2 });
             checkAutoAlarms();
         });
 
-        // 🟢 [RC] 시나리오 프리셋
-        function applyRCPreset(presetKey) {
-            const presets = {
-                '1-1': { sys: 124, dia: 77, hr: 60, spo2: 99, etco2: 43, rr: 10, bt: 36.2, st: 0.2, rhythm: 'normal', tWaveInverted: false, selfBreathing: false, abpMode: false, dbpSync: false },
-                '1-2': { sys: 117, dia: 72, hr: 62, spo2: 100, etco2: 35, rr: 13, bt: 36.1, st: 0.1, rhythm: 'normal', tWaveInverted: false, selfBreathing: false, abpMode: false, dbpSync: false },
-                '2-1': { sys: 75, dia: 43, hr: 71, spo2: 99, etco2: 30, rr: 13, bt: 36.0, st: 0.1, rhythm: 'normal', tWaveInverted: false, selfBreathing: false, abpMode: false, dbpSync: false },
-                '2-2': { sys: 112, dia: 78, hr: 78, spo2: 100, etco2: 34, rr: 11, bt: 36.0, st: 0.3, rhythm: 'normal', tWaveInverted: false, selfBreathing: false, abpMode: false, dbpSync: false },
-                '3-1': { sys: 81, dia: 41, hr: 75, spo2: state.spo2, etco2: 32, rr: 11, bt: 36.0, st: 0.3, rhythm: 'normal', tWaveInverted: false, selfBreathing: false, abpMode: false, dbpSync: false },
-                '3-2': { sys: 108, dia: 72, hr: 84, spo2: state.spo2, etco2: 34, rr: 10, bt: 36.0, st: 0.3, rhythm: 'normal', tWaveInverted: false, selfBreathing: false, abpMode: false, dbpSync: false },
-                '4-1': { sys: 112, dia: 71, hr: 92, spo2: 96, etco2: 44, rr: 10, bt: 35.9, st: 0.5, rhythm: 'normal', tWaveInverted: false, selfBreathing: false, abpMode: false, dbpSync: false },
-                '4-2': { sys: 132, dia: 81, hr: 96, spo2: 99, etco2: 38, rr: 14, bt: 35.9, st: 0.4, rhythm: 'normal', tWaveInverted: false, selfBreathing: false, abpMode: false, dbpSync: false },
-                '5':   { sys: 152, dia: 91, hr: 84, spo2: 100, etco2: 29, rr: 14, bt: 35.9, st: 0.3, rhythm: 'normal', tWaveInverted: false, selfBreathing: false, abpMode: false, dbpSync: false }
-            };
+        // ==========================================
+        // 🟢 동적 시나리오 프리셋 관리 (추가된 영역)
+        // ==========================================
+        const DEFAULT_PRESET_SETS = {
+            "RC 시나리오 (기본)": {
+                '1-1': { sys: 124, dia: 82, hr: 60, spo2: 98,  etco2: 42, rr: 10, bt: 36.3, st: 0.0, rhythm: 'normal', tWaveInverted: false, selfBreathing: false, abpMode: false, dbpSync: true },
+                '1-2': { sys: 124, dia: 82, hr: 60, spo2: 100, etco2: 35, rr: 10, bt: 36.3, st: 0.0, rhythm: 'normal', tWaveInverted: false, selfBreathing: false, abpMode: false, dbpSync: true },
+                '2-1': { sys: 75,  dia: 50, hr: 62, spo2: 100, etco2: 31, rr: 10, bt: 36.2, st: 0.0, rhythm: 'normal', tWaveInverted: false, selfBreathing: false, abpMode: false, dbpSync: true },
+                '2-2': { sys: 102, dia: 68, hr: 75, spo2: 100, etco2: 33, rr: 10, bt: 36.2, st: 0.0, rhythm: 'normal', tWaveInverted: false, selfBreathing: false, abpMode: false, dbpSync: true },
+                '3-1': { sys: 81,  dia: 54, hr: 75, spo2: 100, etco2: 32, rr: 10, bt: 36.2, st: 0.0, rhythm: 'normal', tWaveInverted: false, selfBreathing: false, abpMode: false, dbpSync: true },
+                '3-2': { sys: 93,  dia: 62, hr: 78, spo2: 100, etco2: 34, rr: 10, bt: 36.1, st: 0.0, rhythm: 'normal', tWaveInverted: false, selfBreathing: false, abpMode: false, dbpSync: true },
+                '4-1': { sys: 132, dia: 88, hr: 81, spo2: 98,  etco2: 41, rr: 10, bt: 36.1, st: 0.0, rhythm: 'normal', tWaveInverted: false, selfBreathing: false, abpMode: false, dbpSync: true },
+                '4-2': { sys: 125, dia: 83, hr: 82, spo2: 100, etco2: 36, rr: 14, bt: 36.0, st: 0.0, rhythm: 'normal', tWaveInverted: false, selfBreathing: false, abpMode: false, dbpSync: true },
+                '5-1': { sys: 117, dia: 78, hr: 81, spo2: 99,  etco2: 39, etco2Pattern: 'curare', rr: 14, bt: 36.0, st: 0.0, rhythm: 'normal', tWaveInverted: false, selfBreathing: true, abpMode: false, dbpSync: true },
+                '5-2': { sys: 115, dia: 77, hr: 85, spo2: 100, etco2: 36, etco2Pattern: 'normal', rr: 14, bt: 36.0, st: 0.0, rhythm: 'normal', tWaveInverted: false, selfBreathing: false, abpMode: false, dbpSync: true },
+                '6-1': { sys: 152, dia: 101, hr: 75, spo2: 100, etco2: 30, rr: 14, bt: 36.0, st: 0.0, rhythm: 'normal', tWaveInverted: false, selfBreathing: false, abpMode: false, dbpSync: true },
+                '6-2': { sys: 93,  dia: 62, hr: 78, spo2: 100, etco2: 34, rr: 10, bt: 36.0, st: 0.0, rhythm: 'normal', tWaveInverted: false, selfBreathing: false, abpMode: false, dbpSync: true }
+            }
+        };
 
-            const selected = presets[String(presetKey)];
+        let customPresets = JSON.parse(localStorage.getItem('vvs_presets')) || DEFAULT_PRESET_SETS;
+        
+        const setSelect = document.getElementById('preset-set-select');
+        const stepSelect = document.getElementById('preset-step-select');
+
+        function renderPresetSelectors() {
+            setSelect.innerHTML = '';
+            Object.keys(customPresets).forEach(setName => {
+                const opt = document.createElement('option');
+                opt.value = setName;
+                opt.innerText = setName;
+                setSelect.appendChild(opt);
+            });
+            updateStepOptions();
+        }
+
+        function updateStepOptions() {
+            stepSelect.innerHTML = '';
+            const currentSet = customPresets[setSelect.value] || {};
+            Object.keys(currentSet).forEach(stepKey => {
+                const opt = document.createElement('option');
+                opt.value = stepKey;
+                opt.innerText = `단계 #${stepKey}`;
+                stepSelect.appendChild(opt);
+            });
+        }
+
+        setSelect.addEventListener('change', updateStepOptions);
+
+        document.getElementById('btn-load-preset').addEventListener('click', () => {
+            const setName = setSelect.value;
+            const stepKey = stepSelect.value;
+            const selected = customPresets[setName]?.[stepKey];
+
             if (selected) {
                 Object.assign(state, selected);
-                DOM.ctrlSelfBreathing.checked = state.selfBreathing;
-                DOM.ctrlDbpSync.checked = state.dbpSync;
-                DOM.ctrlTWave.checked = state.tWaveInverted;
-                toggleABPMode(state.abpMode);
+                
+                if (state.dbpSync) {
+                    applySysChange(state.sys);
+                }
+
+                DOM.ctrlSelfBreathing.checked = !!state.selfBreathing;
+                DOM.ctrlDbpSync.checked = !!state.dbpSync;
+                DOM.ctrlTWave.checked = !!state.tWaveInverted;
+                toggleABPMode(!!state.abpMode);
                 updateDisplay();
                 syncToFirebase(state);
                 checkAutoAlarms();
+            } else {
+                alert("선택된 프리셋 데이터가 없습니다.");
             }
-        }
+        });
 
-        // 🟢 [THRA] 시나리오 프리셋
-        function applyTHRAPreset(presetKey) {
-            const presets = {
-                '1-1': { sys: 204, dia: 172, hr: 73, spo2: 94, rr: 15, bt: 36.2, st: 0.2, etco2: 23, selfBreathing: true, abpMode: false, dbpSync: false, rhythm: 'normal', tWaveInverted: false },
-                '1-2': { sys: 124, dia: 81, hr: 74, spo2: 97, rr: 17, bt: 36.2, st: 0.5, etco2: 21, selfBreathing: true, abpMode: false, dbpSync: false, rhythm: 'normal', tWaveInverted: false },
-                '2': { sys: 75, dia: 42, hr: 95, spo2: 86, rr: 32, bt: 36.1, st: 3.4, etco2: 23, selfBreathing: true, abpMode: false, dbpSync: false, rhythm: 'normal', tWaveInverted: false },
-                '3': { sys: 70, dia: 41, hr: 82, spo2: 80, rr: 27, bt: 36.0, st: 5.5, etco2: 28, selfBreathing: false, abpMode: false, dbpSync: false, rhythm: 'normal', tWaveInverted: false },
-                '4': { sys: 100, dia: 50, hr: 82, spo2: 80, rr: 27, bt: 35.9, st: 5.2, etco2: 30, selfBreathing: false, abpMode: false, dbpSync: false, rhythm: 'normal', tWaveInverted: false },
-                '5': { sys: 72, dia: 54, hr: 98, spo2: 100, rr: 12, bt: 35.8, st: 4.2, etco2: 42, selfBreathing: false, abpMode: false, dbpSync: false, rhythm: 'normal', tWaveInverted: false },
-                '6': { sys: 104, dia: 70, hr: 110, spo2: 100, rr: 11, bt: 35.7, st: 2.8, etco2: 32, selfBreathing: false, abpMode: true, dbpSync: false, rhythm: 'normal', tWaveInverted: false },
-                '7': { sys: 91, dia: 57, hr: 121, spo2: 100, rr: 18, bt: 35.6, st: 2.8, etco2: 28, selfBreathing: false, abpMode: true, dbpSync: false, rhythm: 'normal', tWaveInverted: false },
-                '8': { sys: 81, dia: 58, hr: 98, spo2: 100, rr: 11, bt: 35.5, st: 3.1, etco2: 36, selfBreathing: false, abpMode: true, dbpSync: false, rhythm: 'normal', tWaveInverted: false },
-                '9': { sys: 109, dia: 51, hr: 110, spo2: 100, rr: 14, bt: 35.4, st: 2.5, etco2: 27, selfBreathing: false, abpMode: true, dbpSync: false, rhythm: 'normal', tWaveInverted: false }
+        document.getElementById('btn-save-preset').addEventListener('click', () => {
+            const setName = setSelect.value;
+            const stepKey = stepSelect.value;
+
+            if (!confirm(`현재 모니터/컨트롤러의 수치를 [${setName}] 세트의 [단계 #${stepKey}]에 저장하시겠습니까?`)) return;
+
+            if (!customPresets[setName]) customPresets[setName] = {};
+
+            customPresets[setName][stepKey] = {
+                sys: state.sys,
+                dia: state.dia,
+                hr: state.hr,
+                spo2: state.spo2,
+                etco2: state.etco2,
+                rr: state.rr,
+                bt: state.bt,
+                st: state.st,
+                rhythm: state.rhythm || 'normal',
+                tWaveInverted: !!state.tWaveInverted,
+                selfBreathing: !!state.selfBreathing,
+                abpMode: !!state.abpMode,
+                dbpSync: !!state.dbpSync,
+                etco2Pattern: state.etco2Pattern || 'normal',
+                cleftDepth: state.cleftDepth || 0.4
             };
 
-            const selected = presets[String(presetKey)];
-            if (selected) {
-                Object.assign(state, selected);
-                DOM.ctrlSelfBreathing.checked = state.selfBreathing;
-                DOM.ctrlDbpSync.checked = state.dbpSync;
-                DOM.ctrlTWave.checked = state.tWaveInverted;
-                toggleABPMode(state.abpMode);
-                updateDisplay();
-                syncToFirebase(state);
-                checkAutoAlarms();
+            localStorage.setItem('vvs_presets', JSON.stringify(customPresets));
+            alert(`[${setName} - #${stepKey}] 저장 완료되었습니다.`);
+        });
+
+        document.getElementById('btn-add-set').addEventListener('click', () => {
+            const newName = prompt("새로운 프리셋 세트 이름을 입력하세요 (예: THR_심폐관리, 회복실_저혈압 등):");
+            if (!newName || !newName.trim()) return;
+
+            const trimmed = newName.trim();
+            if (customPresets[trimmed]) {
+                alert("이미 존재하는 세트 이름입니다.");
+                return;
             }
-        }
+
+            // 기본 1-1 ~ 6-2 템플릿 복사 생성
+            customPresets[trimmed] = {
+                '1-1': { ...state }, '1-2': { ...state },
+                '2-1': { ...state }, '2-2': { ...state },
+                '3-1': { ...state }, '3-2': { ...state },
+                '4-1': { ...state }, '4-2': { ...state },
+                '5-1': { ...state }, '5-2': { ...state },
+                '6-1': { ...state }, '6-2': { ...state }
+            };
+
+            localStorage.setItem('vvs_presets', JSON.stringify(customPresets));
+            renderPresetSelectors();
+            setSelect.value = trimmed;
+            updateStepOptions();
+        });
+
+        // 초기화 실행
+        renderPresetSelectors();
+        // ==========================================
 
         document.querySelectorAll('input[type="number"]').forEach(input => {
             input.addEventListener('keypress', function(e) {
@@ -1180,52 +1642,55 @@
             btn.addEventListener('click', (e) => {
                 const targetId = e.target.getAttribute('data-target');
                 const step = parseFloat(e.target.getAttribute('data-step'));
-                const input = document.getElementById(targetId);
+                const slider = document.getElementById(targetId);
                 const isPlus = e.target.classList.contains('plus');
                 
-                let newVal = parseFloat(input.value) + (isPlus ? step : -step);
-                const min = parseFloat(input.min);
-                const max = parseFloat(input.max);
-                if(newVal < min) newVal = min;
-                if(newVal > max) newVal = max;
-                
-                input.value = step < 1 ? newVal.toFixed(1) : Math.round(newVal);
-                input.dispatchEvent(new Event('input')); 
+                let newVal = parseFloat(slider.value) + (isPlus ? step : -step);
+                const isFloat = step < 1;
+                const name = targetId.replace('ctrl-', '');
+
+                updateLocalControl(name, newVal, isFloat);
             });
         });
 
-        DOM.ctrlBT.oninput = (e) => { state.bt = parseFloat(e.target.value); updateDisplay(); syncToFirebase({bt: state.bt}); checkAutoAlarms(); };
-        DOM.ctrlHR.oninput = (e) => { state.hr = parseInt(e.target.value); updateDisplay(); syncToFirebase({hr: state.hr}); checkAutoAlarms(); };
-        DOM.ctrlSpO2.oninput = (e) => { state.spo2 = parseInt(e.target.value); updateDisplay(); syncToFirebase({spo2: state.spo2}); checkAutoAlarms(); };
-        DOM.ctrlEtCO2.oninput = (e) => { state.etco2 = parseInt(e.target.value); updateDisplay(); syncToFirebase({etco2: state.etco2}); checkAutoAlarms(); };
-        DOM.ctrlRR.oninput = (e) => { state.rr = parseInt(e.target.value); updateDisplay(); syncToFirebase({rr: state.rr}); checkAutoAlarms(); };
-        DOM.ctrlST.oninput = (e) => { state.st = parseFloat(e.target.value); updateDisplay(); syncToFirebase({st: state.st}); checkAutoAlarms(); };
-
-        DOM.ctrlSys.oninput = (e) => { 
-            applySysChange(parseInt(e.target.value)); 
-            updateDisplay(); 
-            syncToFirebase({sys: state.sys, dia: state.dia}); 
-            checkAutoAlarms();
+        DOM.ctrlSys.oninput  = (e) => updateLocalControl('sys', e.target.value);
+        DOM.ctrlDia.oninput  = (e) => {
+            if (DOM.ctrlDbpSync.checked) DOM.ctrlDbpSync.checked = false;
+            updateLocalControl('dia', e.target.value);
         };
-        
-        DOM.ctrlDia.oninput = (e) => { 
-            state.dia = parseInt(e.target.value); 
-            if(state.dbpSync) {
-                state.dbpSync = false;
-                DOM.ctrlDbpSync.checked = false;
-                syncToFirebase({dbpSync: false});
-            }
-            updateDisplay(); 
-            syncToFirebase({dia: state.dia}); 
+        DOM.ctrlHR.oninput   = (e) => updateLocalControl('hr', e.target.value);
+        DOM.ctrlST.oninput   = (e) => updateLocalControl('st', e.target.value, true);
+        DOM.ctrlSpO2.oninput = (e) => updateLocalControl('spo2', e.target.value);
+        DOM.ctrlEtCO2.oninput= (e) => updateLocalControl('etco2', e.target.value);
+        DOM.ctrlRR.oninput   = (e) => updateLocalControl('rr', e.target.value);
+        DOM.ctrlBT.oninput   = (e) => updateLocalControl('bt', e.target.value, true);
+
+        DOM.inSys.oninput   = (e) => updateLocalControl('sys', e.target.value);
+        DOM.inDia.oninput   = (e) => {
+            if (DOM.ctrlDbpSync.checked) DOM.ctrlDbpSync.checked = false;
+            updateLocalControl('dia', e.target.value);
+        };
+        DOM.inHR.oninput    = (e) => updateLocalControl('hr', e.target.value);
+        DOM.inST.oninput    = (e) => updateLocalControl('st', e.target.value, true);
+        DOM.inSpO2.oninput  = (e) => updateLocalControl('spo2', e.target.value);
+        DOM.inEtCO2.oninput = (e) => updateLocalControl('etco2', e.target.value);
+        DOM.inRR.oninput    = (e) => updateLocalControl('rr', e.target.value);
+        DOM.inBT.oninput    = (e) => updateLocalControl('bt', e.target.value, true);
+
+        DOM.ctrlCleftDepth.oninput = (e) => { 
+            state.cleftDepth = parseFloat(e.target.value); 
+            DOM.inCleftDepth.value = state.cleftDepth; 
+            syncToFirebase({cleftDepth: state.cleftDepth}); 
         };
 
         DOM.ctrlDbpSync.addEventListener('change', (e) => {
             state.dbpSync = e.target.checked;
             if (state.dbpSync) {
-                state.dia = Math.max(20, Math.min(180, Math.round(state.sys * 2 / 3)));
+                const curSys = parseInt(DOM.inSys.value) || state.sys;
+                const autoDia = Math.max(20, Math.min(180, Math.round(curSys * 2 / 3)));
+                DOM.inDia.value = autoDia;
+                DOM.ctrlDia.value = autoDia;
             }
-            updateDisplay();
-            syncToFirebase({ dbpSync: state.dbpSync, dia: state.dia });
         });
 
         DOM.ctrlTWave.addEventListener('change', (e) => { 
@@ -1277,23 +1742,44 @@
             checkAutoAlarms();
         });
 
-        // 🟢 패널 상단 Start 버튼
-        DOM.btnPanelStart.addEventListener('click', (e) => {
-            e.stopPropagation();
+        DOM.ctrlRhythm.addEventListener('wheel', (e) => {
+            e.preventDefault();
+            const dir = e.deltaY > 0 ? 1 : -1;
+            let nextIndex = DOM.ctrlRhythm.selectedIndex + dir;
+            if (nextIndex < 0) nextIndex = 0;
+            if (nextIndex >= DOM.ctrlRhythm.options.length) nextIndex = DOM.ctrlRhythm.options.length - 1;
+            DOM.ctrlRhythm.selectedIndex = nextIndex;
+            state.rhythm = DOM.ctrlRhythm.value;
+            syncToFirebase({ rhythm: state.rhythm });
+            checkAutoAlarms();
+        }, { passive: false });
+
+        DOM.ctrlEtco2Pattern.addEventListener('change', (e) => {
+            state.etco2Pattern = e.target.value;
+            updateDisplay();
+            syncToFirebase({ etco2Pattern: state.etco2Pattern });
+        });
+
+        DOM.ctrlEtco2Pattern.addEventListener('wheel', (e) => {
+            e.preventDefault();
+            const dir = e.deltaY > 0 ? 1 : -1;
+            let nextIndex = DOM.ctrlEtco2Pattern.selectedIndex + dir;
+            if (nextIndex < 0) nextIndex = 0;
+            if (nextIndex >= DOM.ctrlEtco2Pattern.options.length) nextIndex = DOM.ctrlEtco2Pattern.options.length - 1;
+            DOM.ctrlEtco2Pattern.selectedIndex = nextIndex;
+            state.etco2Pattern = DOM.ctrlEtco2Pattern.value;
+            updateDisplay();
+            syncToFirebase({ etco2Pattern: state.etco2Pattern });
+        }, { passive: false });
+
+        DOM.btnPanelStart.addEventListener('click', () => {
             state.monitorStatus = 'running';
             syncToFirebase({ monitorStatus: 'running' });
             startMonitorLocal();
         });
 
-        // 🟢 패널 상단 Stand by 버튼 (확실하게 Firebase 푸시)
-        DOM.btnPanelStandby.addEventListener('click', (e) => {
-            e.stopPropagation();
-            state = {
-                bt: 36.0, hr: 60, spo2: 100, etco2: 35, rr: 10,
-                sys: 120, dia: 80, st: 0.0, tWaveInverted: false, abpMode: false,
-                selfBreathing: false, rhythm: 'normal', dbpSync: true,
-                isMuted: false, volume: 100, monitorStatus: 'standby'
-            };
+        DOM.btnPanelStandby.addEventListener('click', () => {
+            state = JSON.parse(JSON.stringify(DEFAULT_INITIAL_STATE));
             syncToFirebase(state);
             standbyMonitorLocal();
         });
@@ -1354,29 +1840,30 @@
             }, { passive: false });
         }
 
-        setupMonitorWheel('val-bt', 'bt', 10.0, 40.0, 0.1); setupMonitorWheel('val-hr', 'hr', 30, 200, 1);
-        setupMonitorWheel('val-st', 'st', -3.0, 3.0, 0.1); setupMonitorWheel('val-spo2', 'spo2', 50, 100, 1);
-        setupMonitorWheel('val-etco2', 'etco2', 10, 80, 1); setupMonitorWheel('val-rr', 'rr', 5, 60, 1);
-        setupMonitorWheel('val-sys', 'sys', 40, 250, 1); setupMonitorWheel('val-dia', 'dia', 20, 180, 1);
+        setupMonitorWheel('val-bt', 'bt', 30.0, 45.0, 0.1); setupMonitorWheel('val-hr', 'hr', 20, 300, 1);
+        setupMonitorWheel('val-st', 'st', -3.0, 6.0, 0.1); setupMonitorWheel('val-spo2', 'spo2', 20, 100, 1);
+        setupMonitorWheel('val-etco2', 'etco2', 1, 100, 1); setupMonitorWheel('val-rr', 'rr', 2, 40, 1);
+        setupMonitorWheel('val-sys', 'sys', 10, 300, 1); setupMonitorWheel('val-dia', 'dia', 20, 180, 1);
 
-        const inputs = document.querySelectorAll('input[type="range"]');
-        inputs.forEach(input => {
-            input.addEventListener('wheel', function(e) {
+        const vitalControls = [
+            DOM.ctrlSys, DOM.ctrlDia, DOM.ctrlHR, DOM.ctrlST, DOM.ctrlSpO2, DOM.ctrlEtCO2, DOM.ctrlRR, DOM.ctrlBT,
+            DOM.inSys, DOM.inDia, DOM.inHR, DOM.inST, DOM.inSpO2, DOM.inEtCO2, DOM.inRR, DOM.inBT
+        ];
+        vitalControls.forEach(elem => {
+            if (!elem) return;
+            elem.addEventListener('wheel', function(e) {
                 e.preventDefault();
-                const step = parseFloat(this.step) || 1;
+                const step = parseFloat(this.getAttribute('step')) || (this.id.includes('st') || this.id.includes('bt') ? 0.1 : 1);
                 const direction = e.deltaY < 0 ? 1 : -1;
-                let newValue = parseFloat(this.value) + (direction * step);
-                if (newValue >= parseFloat(this.min) && newValue <= parseFloat(this.max)) {
-                    this.value = step < 1 ? newValue.toFixed(1) : newValue;
-                    this.dispatchEvent(new Event('input'));
-                }
+                let newVal = parseFloat(this.value) + (direction * step);
+                const name = this.id.replace('ctrl-', '').replace('input-', '');
+                updateLocalControl(name, newVal, step < 1);
             }, { passive: false }); 
         });
 
         // ==========================================
         // 4. 모니터 시작, 알람, 파형 엔진
         // ==========================================
-
         document.getElementById('mute-btn-overlay').addEventListener('click', () => {
             state.isMuted = !state.isMuted;
             syncToFirebase({ isMuted: state.isMuted });
@@ -1394,14 +1881,30 @@
                 if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
                 const arrayBuffer = await response.arrayBuffer();
                 alarmAudioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
-                console.log("✅ alarm.mp3 음원 로드 완료");
             } catch (error) {
-                console.error("❌ alarm.mp3 음원 로드 실패 (비상 합성음 사용):", error);
+                console.warn("alarm.mp3 음원 로드 실패 (비상 합성음 사용):", error);
+                alarmAudioBuffer = null;
+            }
+        }
+
+        async function loadEkgSound(url) {
+            try {
+                if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const response = await fetch(url);
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                const arrayBuffer = await response.arrayBuffer();
+                ekgAudioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
+            } catch (error) {
+                console.warn("EKG.mp3 음원 로드 실패:", error);
+                ekgAudioBuffer = null;
             }
         }
 
         function triggerManualAlarm(boxElement) {
-            if (!boxElement || boxElement.classList.contains('alarm-active')) return; 
+            if (!boxElement) return;
+            // 이미 애니메이션 중이면 클래스를 리셋해 다시 3회 깜빡이게 처리
+            boxElement.classList.remove('alarm-active');
+            void boxElement.offsetWidth; // Reflow 트리거
             boxElement.classList.add('alarm-active');
             
             if (audioCtx && audioCtx.state === 'running' && !state.isMuted && (state.volume || 0) > 0) {
@@ -1444,21 +1947,6 @@
             });
         });
 
-        async function loadEkgSound(url) {
-            try {
-                if (!audioCtx) {
-                    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                }
-                const response = await fetch(url);
-                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-                const arrayBuffer = await response.arrayBuffer();
-                ekgAudioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
-                console.log("✅ EKG.mp3 음원 로드 완료");
-            } catch (error) {
-                console.error("❌ EKG.mp3 음원 로드 실패:", error);
-            }
-        }
-
         function playBeep() {
             if (!audioCtx || state.isMuted || state.rhythm === 'vf' || (state.volume || 0) <= 0) return; 
             const now = audioCtx.currentTime;
@@ -1467,7 +1955,6 @@
             if (ekgAudioBuffer) {
                 const source = audioCtx.createBufferSource();
                 source.buffer = ekgAudioBuffer;
-                
                 const gainNode = audioCtx.createGain();
                 
                 let pitchRatio = 1.0;
@@ -1478,7 +1965,6 @@
 
                 source.connect(gainNode);
                 gainNode.connect(audioCtx.destination);
-                
                 gainNode.gain.setValueAtTime(volRatio * 2.5, now); 
                 source.start(now);
             } else {
@@ -1500,31 +1986,35 @@
             }
         }
 
-        async function startMonitorLocal() {
+        function startMonitorLocal() {
             currentMonitorStatus = 'running';
-            DOM.overlay.style.display = 'none';
-            if (!audioCtx) {
-                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            if(DOM.overlay) DOM.overlay.style.display = 'none';
+
+            try {
+                if (!audioCtx) {
+                    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                }
+                if (audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
+                if (!ekgAudioBuffer) loadEkgSound('EKG.mp3');
+                if (!alarmAudioBuffer) loadAlarmSound('alarm.mp3');
+            } catch (err) {
+                console.warn("Audio system initialization failed:", err);
             }
-            if (audioCtx.state === 'suspended') {
-                await audioCtx.resume();
-            }
-            if (!ekgAudioBuffer) {
-                await loadEkgSound('EKG.mp3');
-            }
-            if (!alarmAudioBuffer) {
-                await loadAlarmSound('alarm.mp3');
-            }
+
             lastBeepTime = performance.now();
             cancelAnimationFrame(animationId);
             scanX = 0;
+            
+            resizeCanvas();
             animationId = requestAnimationFrame(drawWaveforms);
             checkAutoAlarms();
         }
 
         function standbyMonitorLocal() {
             currentMonitorStatus = 'standby';
-            DOM.overlay.style.display = 'flex';
+            if(DOM.overlay) DOM.overlay.style.display = 'flex';
             cancelAnimationFrame(animationId);
             if (audioCtx) {
                 audioCtx.close();
@@ -1542,19 +2032,14 @@
             updateDisplay();
         }
 
-        DOM.btnStart.addEventListener('click', async () => {
+        DOM.btnStart.addEventListener('click', () => {
             state.monitorStatus = 'running';
             syncToFirebase({ monitorStatus: 'running' });
-            await startMonitorLocal();
+            startMonitorLocal();
         });
 
         DOM.btnStandby.addEventListener('click', () => {
-            state = {
-                bt: 36.0, hr: 60, spo2: 100, etco2: 35, rr: 10,
-                sys: 120, dia: 80, st: 0.0, tWaveInverted: false, abpMode: false,
-                selfBreathing: false, rhythm: 'normal', dbpSync: true,
-                isMuted: false, volume: 100, monitorStatus: 'standby'
-            };
+            state = JSON.parse(JSON.stringify(DEFAULT_INITIAL_STATE));
             syncToFirebase(state);
             standbyMonitorLocal();
         });
@@ -1570,13 +2055,18 @@
         function resizeCanvas() {
             for (let key in canvases) {
                 if (canvases[key] && canvases[key].parentElement) {
-                    canvases[key].width = canvases[key].parentElement.clientWidth;
-                    canvases[key].height = canvases[key].parentElement.clientHeight;
-                    ctxs[key] = canvases[key].getContext('2d');
+                    const w = canvases[key].parentElement.clientWidth;
+                    const h = canvases[key].parentElement.clientHeight;
+                    if(w > 0 && h > 0) {
+                        canvases[key].width = w;
+                        canvases[key].height = h;
+                        ctxs[key] = canvases[key].getContext('2d');
+                    }
                 }
             }
         }
         window.addEventListener('resize', resizeCanvas);
+        window.addEventListener('load', resizeCanvas);
         
         const ro = new ResizeObserver(() => resizeCanvas());
         ro.observe(document.getElementById('monitor'));
@@ -1585,6 +2075,129 @@
         let scanX = 0; const scanSpeed = 2.5; let lastYs = { ecg: 0, spo2: 0, etco2: 0, rr: 0 };
         let lastEtco2Cycle = -1;
 
+        // Capnography Mathematical Models
+        class CapnographyRenderer {
+            static calculate(phase, pattern, cleftDepth, timeSec) {
+                let v = 0;
+                switch (pattern) {
+                    case 'curare': {
+                        const pStart = 0.25, pEnd = 0.75, rDur = 0.015, fDur = 0.015;
+                        if (phase >= pStart && phase < pStart + rDur) {
+                            v = (phase - pStart) / rDur;
+                        } else if (phase >= pStart + rDur && phase <= pEnd) {
+                            const pProg = (phase - (pStart + rDur)) / (pEnd - (pStart + rDur));
+                            let basePlateau = 1.0 + pProg * 0.04;
+                            if (pProg >= 0.45 && pProg <= 0.70) {
+                                const cProg = (pProg - 0.45) / 0.25;
+                                const dip = Math.sin(cProg * Math.PI) * (cleftDepth || 0.4);
+                                v = Math.max(0.1, basePlateau - dip);
+                            } else {
+                                v = basePlateau;
+                            }
+                        } else if (phase > pEnd && phase <= pEnd + fDur) {
+                            v = 1.04 * (1 - (phase - pEnd) / fDur);
+                        } else {
+                            v = 0;
+                        }
+                        break;
+                    }
+                    case 'ineffective': {
+                        const cycle = Math.floor(timeSec);
+                        const isMissed = (cycle % 3 === 2);
+                        if (isMissed) {
+                            if (phase >= 0.2 && phase < 0.4) {
+                                v = Math.sin((phase - 0.2) / 0.2 * Math.PI) * 0.25;
+                            } else {
+                                v = 0;
+                            }
+                        } else {
+                            if (phase >= 0.20 && phase < 0.24) {
+                                v = -0.08 * Math.sin((phase - 0.20) / 0.04 * Math.PI);
+                            } else if (phase >= 0.24 && phase < 0.26) {
+                                v = (phase - 0.24) / 0.02;
+                            } else if (phase >= 0.26 && phase <= 0.75) {
+                                v = 1.0 + (phase - 0.26) * 0.05;
+                            } else if (phase > 0.75 && phase <= 0.77) {
+                                v = 1.03 * (1 - (phase - 0.75) / 0.02);
+                            } else {
+                                v = 0;
+                            }
+                        }
+                        break;
+                    }
+                    case 'autotrigger': {
+                        const pStart = 0.2, pEnd = 0.65;
+                        if (phase >= pStart && phase < pStart + 0.02) {
+                            v = (phase - pStart) / 0.02;
+                        } else if (phase >= pStart + 0.02 && phase <= pEnd) {
+                            v = 0.85 + Math.sin(timeSec * 30) * 0.03;
+                        } else if (phase > pEnd && phase <= pEnd + 0.02) {
+                            v = 0.85 * (1 - (phase - pEnd) / 0.02);
+                        } else {
+                            v = Math.abs(Math.sin(timeSec * 25)) * 0.04;
+                        }
+                        break;
+                    }
+                    case 'doubletrigger': {
+                        if (phase >= 0.15 && phase < 0.40) {
+                            const subP = (phase - 0.15) / 0.25;
+                            if (subP < 0.1) v = subP / 0.1 * 0.8;
+                            else if (subP < 0.8) v = 0.8;
+                            else v = 0.8 * (1 - (subP - 0.8) / 0.2);
+                        } else if (phase >= 0.42 && phase < 0.75) {
+                            const subP2 = (phase - 0.42) / 0.33;
+                            if (subP2 < 0.08) v = subP2 / 0.08 * 1.05;
+                            else if (subP2 < 0.85) v = 1.05;
+                            else v = 1.05 * (1 - (subP2 - 0.85) / 0.15);
+                        } else {
+                            v = 0;
+                        }
+                        break;
+                    }
+                    case 'fighting': {
+                        if (phase >= 0.25 && phase < 0.27) {
+                            v = (phase - 0.25) / 0.02;
+                        } else if (phase >= 0.27 && phase <= 0.75) {
+                            const prog = (phase - 0.27) / 0.48;
+                            v = 1.0 + prog * 0.08 + Math.sin(phase * 40 * Math.PI) * 0.08;
+                        } else if (phase > 0.75 && phase <= 0.77) {
+                            v = 1.1 * (1 - (phase - 0.75) / 0.02);
+                        } else {
+                            v = 0;
+                        }
+                        break;
+                    }
+                    case 'sharkfin': {
+                        if (phase >= 0.20 && phase <= 0.75) {
+                            const prog = (phase - 0.20) / 0.55;
+                            v = Math.pow(prog, 2.5) * 1.08;
+                        } else if (phase > 0.75 && phase <= 0.78) {
+                            v = 1.08 * (1 - (phase - 0.75) / 0.03);
+                        } else {
+                            v = 0;
+                        }
+                        break;
+                    }
+                    case 'normal':
+                    default: {
+                        const pStart = 0.25, pEnd = 0.75, rDur = 0.015, fDur = 0.015;
+                        if (phase >= pStart && phase < pStart + rDur) {
+                            v = (phase - pStart) / rDur;
+                        } else if (phase >= pStart + rDur && phase <= pEnd) {
+                            const pProg = (phase - (pStart + rDur)) / (pEnd - (pStart + rDur));
+                            v = 1.0 + pProg * 0.04;
+                        } else if (phase > pEnd && phase <= pEnd + fDur) {
+                            v = 1.04 * (1 - (phase - pEnd) / fDur);
+                        } else {
+                            v = 0;
+                        }
+                        break;
+                    }
+                }
+                return v;
+            }
+        }
+
         function drawWaveforms(timestamp) {
             const beepInterval = 60000 / state.hr;
             if (timestamp - lastBeepTime >= beepInterval) { playBeep(); lastBeepTime = timestamp; }
@@ -1592,7 +2205,10 @@
             scanX += scanSpeed; if (scanX >= canvases.ecg.width) scanX = 0;
 
             for (let key in ctxs) {
-                const ctx = ctxs[key]; const h = canvases[key].height;
+                const ctx = ctxs[key];
+                if (!ctx) continue;
+                
+                const h = canvases[key].height;
                 ctx.clearRect(scanX, 0, 15, h); ctx.beginPath();
                 ctx.moveTo(scanX - scanSpeed, lastYs[key] || h / 2);
 
@@ -1677,11 +2293,12 @@
                     y = h * 0.8 - (v * h * 0.6); ctx.strokeStyle = '#00ffff';
                 }
                 else if (key === 'etco2') {
-                    const respDuration = (60 / state.rr) / 3;
+                    const effRR = (state.etco2Pattern === 'autotrigger') ? state.rr * 2 : state.rr;
+                    const respDuration = (60 / effRR) / 3;
                     const phase = (timeSec % respDuration) / respDuration;
                     const cycleIndex = Math.floor(timeSec / respDuration);
-                    let v = 0;
 
+                    let v = 0;
                     if (state.selfBreathing) {
                         if (cycleIndex !== lastEtco2Cycle) {
                             lastEtco2Cycle = cycleIndex;
@@ -1689,47 +2306,16 @@
                             const randomEtCO2 = 10 + Math.floor((pseudoRandom - Math.floor(pseudoRandom)) * 15);
                             DOM.valEtCO2.innerText = randomEtCO2;
                         }
-
                         const currentVal = parseInt(DOM.valEtCO2.innerText) || 18;
                         const breathNoise = Math.sin(cycleIndex * 14.3) * 0.15;
-
-                        if (phase > 0.18 && phase < 0.72) {
-                            const expPhase = (phase - 0.18) / 0.54;
-                            if (expPhase < 0.25) {
-                                v = Math.sin((expPhase / 0.25) * (Math.PI / 2));
-                            } else if (expPhase <= 0.85) {
-                                const plateauProgress = (expPhase - 0.25) / 0.6;
-                                v = 1.0 + plateauProgress * 0.08 + Math.sin(timeSec * 8) * 0.02;
-                            } else {
-                                v = 1.08 * (1 - (expPhase - 0.85) / 0.15);
-                            }
-                        } else {
-                            v = 0;
-                        }
-
+                        v = CapnographyRenderer.calculate(phase, state.etco2Pattern, state.cleftDepth, timeSec);
                         const amp = (currentVal / 80) * (1 + breathNoise * 0.2);
                         y = h * 0.92 - (v * h * 0.9 * amp);
                     } else {
                         if (DOM.valEtCO2.innerText != state.etco2) {
                             DOM.valEtCO2.innerText = state.etco2;
                         }
-
-                        const plateauStart = 0.25;
-                        const plateauEnd = 0.75;
-                        const riseDuration = 0.015;
-                        const fallDuration = 0.015;
-
-                        if (phase >= plateauStart && phase < plateauStart + riseDuration) {
-                            v = (phase - plateauStart) / riseDuration;
-                        } else if (phase >= plateauStart + riseDuration && phase <= plateauEnd) {
-                            const plateauProgress = (phase - (plateauStart + riseDuration)) / (plateauEnd - (plateauStart + riseDuration));
-                            v = 1.0 + plateauProgress * 0.04;
-                        } else if (phase > plateauEnd && phase <= plateauEnd + fallDuration) {
-                            v = 1.04 * (1 - (phase - plateauEnd) / fallDuration);
-                        } else {
-                            v = 0;
-                        }
-
+                        v = CapnographyRenderer.calculate(phase, state.etco2Pattern, state.cleftDepth, timeSec);
                         const amp = state.etco2 / 80;
                         y = h * 0.9 - (v * h * 0.98 * amp);
                     }
@@ -1756,7 +2342,7 @@
         }
 
         // ==========================================
-        // 5. 드래그, 리사이즈 및 최소화(접기)
+        // 5. 드래그, 리사이즈 및 최소화
         // ==========================================
         let highestZ = 20;
 
