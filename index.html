@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Patient Monitor Simulation</title>
+    <title>Virtual Vital Sign Simulator (VVSS) | Patient Monitor</title>
+    <meta name="description" content="Free web-based virtual vital sign and patient monitor simulator for medical education, nursing simulation, and clinical training. Real-time ECG, SpO2, Capnography, and NBP parameters.">
     
     <!-- 🟢 Firebase SDK 및 QR 라이브러리 -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
@@ -479,7 +480,7 @@
             cursor: ns-resize;
         }
 
-        /* 🟢 [Scenario Preset Management] 섹션 스타일 (첨부 이미지 디자인 반영) */
+        /* 🟢 [Scenario Preset Management] 섹션 스타일 */
         .scenario-section {
             margin-top: 6px;
             padding: 8px;
@@ -614,14 +615,12 @@
         .btn-scenario:active {
             transform: scale(0.96);
         }
-        /* 현재 선택된 단계 강조 (바이탈 조작 시 자동 저장 표시) */
         .btn-scenario.active-phase {
             border-color: #ffeb3b;
             background-color: #4a4520;
             color: #ffeb3b;
             box-shadow: 0 0 6px rgba(255, 235, 59, 0.45);
         }
-        /* 수정 모드 시 스타일 */
         .btn-scenario.edit-mode-item {
             border-style: dashed;
             border-color: #ff9800;
@@ -639,7 +638,6 @@
             transform: scale(1.04);
         }
 
-        /* 좌측 상단 조그만 ⓧ 삭제 버튼 */
         .phase-del-btn {
             position: absolute;
             top: -6px;
@@ -773,6 +771,33 @@
             font-weight: bold; transition: 0.2s; width: 100%;
         }
         .session-btn:hover { background: #444; color: #fff; }
+
+        /* 📱 모바일 화면 (폭 768px 이하) 전용 레이아웃 ('사진 2' 스타일) */
+        @media (max-width: 768px) {
+            #monitor-wrapper {
+                left: 1vw;
+                top: 1vh;
+                width: 98vw;
+                max-width: 98vw;
+            }
+
+            #controls {
+                left: 0;
+                right: 0;
+                top: calc(1vh + (98vw / 1.3) + 6px);
+                width: 100vw;
+                max-width: 100vw;
+                max-height: calc(99vh - (98vw / 1.3) - 6px);
+                border-radius: 12px 12px 0 0;
+            }
+
+            #qr-container {
+                bottom: 12px;
+                left: 12px;
+                width: 165px;
+                padding: 6px 10px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -886,7 +911,7 @@
                     <option value="10">Vol: 10%</option>
                     <option value="0">Vol: 0%</option>
                 </select>
-<!-- ✅ 패들렛 커뮤니티 바로가기 버튼 추가 -->
+                <!-- ✅ 패들렛 커뮤니티 바로가기 버튼 추가 -->
                 <button type="button" class="panel-top-btn" style="background:#5c4b8b; color:#fff; border:1px solid #7c6bb0;" onclick="window.open('https://padlet.com/geonjiyong/VVSS', '_blank')" title="의견 및 프리셋 공유 패들렛 열기">💬 VVSS Community</button>
             </div>
             <button class="min-btn" id="ctrl-min-btn" title="최소화/열기">−</button>
@@ -1149,7 +1174,7 @@
                 </div>
             </div>
 
-            <!-- 🟢 [시나리오 프리셋 관리] 영역 (신규 디자인 및 기능) -->
+            <!-- 🟢 [시나리오 프리셋 관리] 영역 -->
             <div class="scenario-section">
                 <div class="scenario-header">[Scenario Preset Management]</div>
                 
@@ -1308,20 +1333,33 @@
         const DEFAULT_PRESET_DATA = {
             currentSet: "RC 시나리오 (기본)",
             sets: {
-                "RC 시나리오 (기본)": [
-                    { name: "#1-1", vitals: { sys: 124, dia: 83, hr: 60, spo2: 98,  etco2: 42, rr: 10, bt: 36.3, st: 0.0, rhythm: 'normal', etco2Pattern: 'normal', cleftDepth: 0.4, tWaveInverted: false, selfBreathing: false, abpMode: false, dbpSync: true } },
-                    { name: "#1-2", vitals: { sys: 124, dia: 83, hr: 60, spo2: 100, etco2: 35, rr: 10, bt: 36.3, st: 0.0, rhythm: 'normal', etco2Pattern: 'normal', cleftDepth: 0.4, tWaveInverted: false, selfBreathing: false, abpMode: false, dbpSync: true } },
-                    { name: "#2-1", vitals: { sys: 75,  dia: 50, hr: 62, spo2: 100, etco2: 31, rr: 10, bt: 36.2, st: 0.0, rhythm: 'normal', etco2Pattern: 'normal', cleftDepth: 0.4, tWaveInverted: false, selfBreathing: false, abpMode: false, dbpSync: true } },
-                    { name: "#2-2", vitals: { sys: 102, dia: 68, hr: 75, spo2: 100, etco2: 33, rr: 10, bt: 36.2, st: 0.0, rhythm: 'normal', etco2Pattern: 'normal', cleftDepth: 0.4, tWaveInverted: false, selfBreathing: false, abpMode: false, dbpSync: true } },
-                    { name: "#3-1", vitals: { sys: 81,  dia: 54, hr: 75, spo2: 100, etco2: 32, rr: 10, bt: 36.2, st: 0.0, rhythm: 'normal', etco2Pattern: 'normal', cleftDepth: 0.4, tWaveInverted: false, selfBreathing: false, abpMode: false, dbpSync: true } },
-                    { name: "#3-2", vitals: { sys: 93,  dia: 62, hr: 78, spo2: 100, etco2: 34, rr: 10, bt: 36.1, st: 0.0, rhythm: 'normal', etco2Pattern: 'normal', cleftDepth: 0.4, tWaveInverted: false, selfBreathing: false, abpMode: false, dbpSync: true } },
-                    { name: "#4-1", vitals: { sys: 132, dia: 88, hr: 81, spo2: 98,  etco2: 41, rr: 10, bt: 36.1, st: 0.0, rhythm: 'normal', etco2Pattern: 'normal', cleftDepth: 0.4, tWaveInverted: false, selfBreathing: false, abpMode: false, dbpSync: true } },
-                    { name: "#4-2", vitals: { sys: 125, dia: 83, hr: 82, spo2: 100, etco2: 36, rr: 14, bt: 36.0, st: 0.0, rhythm: 'normal', etco2Pattern: 'normal', cleftDepth: 0.4, tWaveInverted: false, selfBreathing: false, abpMode: false, dbpSync: true } },
-                    { name: "#5-1", vitals: { sys: 117, dia: 78, hr: 81, spo2: 99,  etco2: 39, rr: 14, bt: 36.0, st: 0.0, rhythm: 'normal', etco2Pattern: 'curare', cleftDepth: 0.4, tWaveInverted: false, selfBreathing: true,  abpMode: false, dbpSync: true } },
-                    { name: "#5-2", vitals: { sys: 115, dia: 77, hr: 85, spo2: 100, etco2: 36, rr: 14, bt: 36.0, st: 0.0, rhythm: 'normal', etco2Pattern: 'normal', cleftDepth: 0.4, tWaveInverted: false, selfBreathing: false, abpMode: false, dbpSync: true } },
-                    { name: "#6-1", vitals: { sys: 152, dia: 101,hr: 75, spo2: 100, etco2: 30, rr: 14, bt: 36.0, st: 0.0, rhythm: 'normal', etco2Pattern: 'normal', cleftDepth: 0.4, tWaveInverted: false, selfBreathing: false, abpMode: false, dbpSync: true } },
-                    { name: "#6-2", vitals: { sys: 93,  dia: 62, hr: 78, spo2: 100, etco2: 34, rr: 10, bt: 36.0, st: 0.0, rhythm: 'normal', etco2Pattern: 'normal', cleftDepth: 0.4, tWaveInverted: false, selfBreathing: false, abpMode: false, dbpSync: true } }
-                ]
+	"RC 시나리오 (기본)": [
+    	{ name: "#1-1", vitals: { sys: 124, dia: 83, hr: 70, spo2: 98,  etco2: 41, rr: 10, bt: 36.3, st: 0.0, rhythm: 'normal', etco2Pattern: 'normal', cleftDepth: 0.4, tWaveInverted: false, selfBreathing: false, abpMode: false, dbpSync: true } },
+   	 { name: "#1-2", vitals: { sys: 119, dia: 75, hr: 70, spo2: 100, etco2: 36, rr: 12, bt: 36.3, st: 0.0, rhythm: 'normal', etco2Pattern: 'normal', cleftDepth: 0.4, tWaveInverted: false, selfBreathing: false, abpMode: false, dbpSync: true } },
+  	  { name: "#2-1", vitals: { sys: 75,  dia: 50, hr: 65, spo2: 100, etco2: 31, rr: 12, bt: 36.2, st: 0.0, rhythm: 'normal', etco2Pattern: 'normal', cleftDepth: 0.4, tWaveInverted: false, selfBreathing: false, abpMode: false, dbpSync: true } },
+  	  { name: "#2-2", vitals: { sys: 102, dia: 68, hr: 75, spo2: 100, etco2: 33, rr: 12, bt: 36.2, st: 0.0, rhythm: 'normal', etco2Pattern: 'normal', cleftDepth: 0.4, tWaveInverted: false, selfBreathing: false, abpMode: false, dbpSync: true } },
+  	  { name: "#3-1", vitals: { sys: 81,  dia: 54, hr: 75, spo2: 100, etco2: 32, rr: 12, bt: 36.2, st: 0.0, rhythm: 'normal', etco2Pattern: 'normal', cleftDepth: 0.4, tWaveInverted: false, selfBreathing: false, abpMode: false, dbpSync: true } },
+   	 { name: "#3-2", vitals: { sys: 93,  dia: 65, hr: 78, spo2: 100, etco2: 34, rr: 11, bt: 36.1, st: 0.0, rhythm: 'normal', etco2Pattern: 'normal', cleftDepth: 0.4, tWaveInverted: false, selfBreathing: false, abpMode: false, dbpSync: true } },
+   	 { name: "#4-1", vitals: { sys: 132, dia: 88, hr: 81, spo2: 98,  etco2: 43, rr: 11, bt: 36.1, st: 0.0, rhythm: 'normal', etco2Pattern: 'normal', cleftDepth: 0.4, tWaveInverted: false, selfBreathing: false, abpMode: false, dbpSync: true } },
+   	 { name: "#4-2", vitals: { sys: 125, dia: 83, hr: 85, spo2: 100, etco2: 36, rr: 14, bt: 36.0, st: 0.0, rhythm: 'normal', etco2Pattern: 'normal', cleftDepth: 0.4, tWaveInverted: false, selfBreathing: false, abpMode: false, dbpSync: true } },
+  	  { name: "#5-1", vitals: { sys: 117, dia: 78, hr: 81, spo2: 99,  etco2: 42, rr: 14, bt: 36.0, st: 0.0, rhythm: 'normal', etco2Pattern: 'curare', cleftDepth: 0.4, tWaveInverted: false, selfBreathing: true,  abpMode: false, dbpSync: true } },
+  	  { name: "#5-2", vitals: { sys: 115, dia: 77, hr: 85, spo2: 100, etco2: 36, rr: 14, bt: 36.0, st: 0.0, rhythm: 'normal', etco2Pattern: 'normal', cleftDepth: 0.4, tWaveInverted: false, selfBreathing: false, abpMode: false, dbpSync: true } },
+   	 { name: "#6-1", vitals: { sys: 152, dia: 101,hr: 75, spo2: 100, etco2: 30, rr: 14, bt: 36.0, st: 0.0, rhythm: 'normal', etco2Pattern: 'normal', cleftDepth: 0.4, tWaveInverted: false, selfBreathing: false, abpMode: false, dbpSync: true } },
+   	 { name: "#6-2", vitals: { sys: 122, dia: 81, hr: 78, spo2: 100, etco2: 35, rr: 10, bt: 36.0, st: 0.0, rhythm: 'normal', etco2Pattern: 'normal', cleftDepth: 0.4, tWaveInverted: false, selfBreathing: false, abpMode: false, dbpSync: true } }
+	],
+	"MTP 대처 시나리오 프리셋": [
+	{ name: "시작", vitals: { sys: 105, dia: 69, hr: 71, spo2: 100, etco2: 38, rr: 12, bt: 36.1, st: 0.4, rhythm: 'normal', etco2Pattern: 'normal', cleftDepth: 0.4, tWaveInverted: false, selfBreathing: false, abpMode: true, dbpSync: true } },
+	{ name: "#1", vitals: { sys: 72, dia: 38, hr: 124, spo2: 95, etco2: 28, rr: 14, bt: 35.9, st: 0.8, rhythm: 'normal', etco2Pattern: 'normal', cleftDepth: 0.4, tWaveInverted: false, selfBreathing: false, abpMode: true, dbpSync: true } },
+	{ name: "#2", vitals: { sys: 92, dia: 51, hr: 125, spo2: 96, etco2: 30, rr: 14, bt: 35.9, st: 0.6, rhythm: 'normal', etco2Pattern: 'normal', cleftDepth: 0.4, tWaveInverted: false, selfBreathing: false, abpMode: true, dbpSync: true } },
+	{ name: "#3-1", vitals: { sys: 85, dia: 48, hr: 125, spo2: 97, etco2: 30, rr: 12, bt: 35.8, st: 0.8, rhythm: 'normal', etco2Pattern: 'normal', cleftDepth: 0.4, tWaveInverted: false, selfBreathing: false, abpMode: true, dbpSync: true } },
+	{ name: "#3-2", vitals: { sys: 101, dia: 62, hr: 121, spo2: 98, etco2: 32, rr: 12, bt: 35.7, st: 0.5, rhythm: 'normal', etco2Pattern: 'normal', cleftDepth: 0.4, tWaveInverted: false, selfBreathing: false, abpMode: true, dbpSync: true } },
+	{ name: "#4-1", vitals: { sys: 78, dia: 42, hr: 120, spo2: 95, etco2: 26, rr: 14, bt: 35.6, st: 0.4, rhythm: 'normal', etco2Pattern: 'normal', cleftDepth: 0.4, tWaveInverted: false, selfBreathing: false, abpMode: true, dbpSync: true } },
+	{ name: "#4-2", vitals: { sys: 90, dia: 51, hr: 112, spo2: 97, etco2: 29, rr: 14, bt: 35.6, st: 0.8, rhythm: 'normal', etco2Pattern: 'normal', cleftDepth: 0.4, tWaveInverted: false, selfBreathing: false, abpMode: true, dbpSync: true } },
+	{ name: "#4-3", vitals: { sys: 96, dia: 58, hr: 115, spo2: 97, etco2: 30, rr: 14, bt: 35.7, st: 1.0, rhythm: 'normal', etco2Pattern: 'normal', cleftDepth: 0.4, tWaveInverted: false, selfBreathing: false, abpMode: true, dbpSync: true } },
+	{ name: "#5-1", vitals: { sys: 115, dia: 72, hr: 92, spo2: 99, etco2: 35, rr: 12, bt: 35.7, st: -0.1, rhythm: 'normal', etco2Pattern: 'normal', cleftDepth: 0.4, tWaveInverted: false, selfBreathing: false, abpMode: true, dbpSync: true } },
+	{ name: "#5-2", vitals: { sys: 101, dia: 66, hr: 91, spo2: 100, etco2: 34, rr: 12, bt: 35.7, st: 0.2, rhythm: 'normal', etco2Pattern: 'normal', cleftDepth: 0.4, tWaveInverted: false, selfBreathing: false, abpMode: true, dbpSync: true } },
+	{ name: "#6", vitals: { sys: 98, dia: 65, hr: 95, spo2: 100, etco2: 34, rr: 11, bt: 35.7, st: 0.3, rhythm: 'normal', etco2Pattern: 'normal', cleftDepth: 0.4, tWaveInverted: false, selfBreathing: false, abpMode: true, dbpSync: true } }
+	]
             }
         };
 
@@ -1389,7 +1427,6 @@
             };
         }
 
-        // 7. 선택된 단계가 있을 때 컨트롤러 바이탈 조작 시 해당 단계에 자동 저장
         function updateActivePhaseVitalsIfSelected() {
             if (activePhaseIndex === null) return;
             const currentPhases = presetData.sets[presetData.currentSet];
@@ -1402,7 +1439,6 @@
         }
 
         function renderPresetUI() {
-            // 드롭다운 렌더링
             presetDOM.setSelect.innerHTML = '';
             Object.keys(presetData.sets).forEach(setName => {
                 const opt = document.createElement('option');
@@ -1412,7 +1448,6 @@
                 presetDOM.setSelect.appendChild(opt);
             });
 
-            // Edit mode 버튼 상태 반영
             if (isEditMode) {
                 presetDOM.btnEditMode.textContent = 'Save changes';
                 presetDOM.btnEditMode.classList.add('edit-active');
@@ -1421,7 +1456,6 @@
                 presetDOM.btnEditMode.classList.remove('edit-active');
             }
 
-            // 단계(Phase) 버튼 그리드 렌더링
             presetDOM.phaseGrid.innerHTML = '';
             const phases = presetData.sets[presetData.currentSet] || [];
 
@@ -1437,17 +1471,14 @@
                 labelSpan.textContent = phaseObj.name;
                 btn.appendChild(labelSpan);
 
-                // 클릭 시 해당 단계의 바이탈 불러오기 및 활성화
                 btn.addEventListener('click', (e) => {
                     if (e.target.classList.contains('phase-del-btn')) return;
                     applyPhasePreset(idx);
                 });
 
-                // 수정 모드 기능 (더블클릭 이름 수정, ⓧ 삭제, 드래그 순서 변경)
                 if (isEditMode) {
                     btn.title = '더블클릭: 이름 수정 / 드래그: 순서 변경';
 
-                    // 더블클릭하여 단계 이름 수정
                     btn.addEventListener('dblclick', (e) => {
                         e.stopPropagation();
                         const newName = prompt('Please enter the new phase name', phaseObj.name);
@@ -1457,7 +1488,6 @@
                         }
                     });
 
-                    // 좌측 상단 조그만 ⓧ 버튼
                     const delBtn = document.createElement('span');
                     delBtn.className = 'phase-del-btn';
                     delBtn.textContent = '✕';
@@ -1473,7 +1503,6 @@
                     });
                     btn.appendChild(delBtn);
 
-                    // 드래그 앤 드롭으로 순서 변경
                     btn.draggable = true;
                     btn.addEventListener('dragstart', (e) => {
                         dragSrcIndex = idx;
@@ -1503,7 +1532,6 @@
                         const movedItem = phases.splice(dragSrcIndex, 1)[0];
                         phases.splice(idx, 0, movedItem);
 
-                        // activePhaseIndex 인덱스 보정
                         if (activePhaseIndex === dragSrcIndex) {
                             activePhaseIndex = idx;
                         } else if (activePhaseIndex !== null) {
@@ -1544,7 +1572,6 @@
             checkAutoAlarms();
         }
 
-        // 3. 드롭다운으로 세트 변경
         presetDOM.setSelect.addEventListener('change', (e) => {
             presetData.currentSet = e.target.value;
             activePhaseIndex = null;
@@ -1552,7 +1579,6 @@
             renderPresetUI();
         });
 
-        // 4. 신규세트 (New set)
         presetDOM.btnNewSet.addEventListener('click', () => {
             const setName = prompt('Please enter the set name');
             if (setName === null) return;
@@ -1564,21 +1590,19 @@
                 return;
             }
 
-            presetData.sets[trimmed] = []; // 세트 추가 시 단계는 비어있음
+            presetData.sets[trimmed] = [];
             presetData.currentSet = trimmed;
             activePhaseIndex = null;
             if (!isEditMode) savePresetsToStorage();
             renderPresetUI();
         });
 
-        // 5. 단계추가 (Add a phase)
         presetDOM.btnAddPhase.addEventListener('click', () => {
             const phaseName = prompt('Please enter the phase name');
             if (phaseName === null) return;
             const trimmed = phaseName.trim();
             if (!trimmed) return;
 
-            // 현재 입력창에 입력 중인 수치까지 반영하여 현재 바이탈 캡처
             state.bt = parseFloat(DOM.inBT.value) || state.bt;
             state.hr = parseInt(DOM.inHR.value) || state.hr;
             state.st = parseFloat(DOM.inST.value) || 0.0;
@@ -1602,15 +1626,12 @@
             renderPresetUI();
         });
 
-        // 6. 수정모드 (Edit mode / Save changes)
         presetDOM.btnEditMode.addEventListener('click', () => {
             if (!isEditMode) {
-                // Edit mode 진입 전 상태 백업
                 backupBeforeEdit = JSON.parse(JSON.stringify(presetData));
                 isEditMode = true;
                 renderPresetUI();
             } else {
-                // Save changes 클릭 시 Yes(Save) / No(Discard) 모달 표출
                 presetDOM.saveModal.style.display = 'flex';
             }
         });
@@ -1634,7 +1655,6 @@
             renderPresetUI();
         });
 
-        // 1. 프리셋 내보내기 (Export preset) - showSaveFilePicker API (startIn: 'documents')
         presetDOM.btnExport.addEventListener('click', async () => {
             const exportJsonStr = JSON.stringify(presetData, null, 2);
 
@@ -1661,7 +1681,6 @@
                     }
                 }
             } else {
-                // 브라우저가 showSaveFilePicker를 지원하지 않을 때의 폴백
                 const fileNameInput = prompt('Please enter a file name', presetData.currentSet || 'preset');
                 if (!fileNameInput) return;
                 const cleanName = fileNameInput.trim().replace(/\.json$/i, '');
@@ -1678,7 +1697,6 @@
             }
         });
 
-// 2. 프리셋 불러오기 (Import preset) - showOpenFilePicker / showSaveFilePicker 호환 (startIn: 'documents')
         function applyImportedPresetObject(importedObj, fileName) {
             if (!importedObj || typeof importedObj !== 'object' || !importedObj.sets) {
                 alert('Invalid preset JSON file format.');
@@ -1697,7 +1715,6 @@
             savePresetsToStorage();
             renderPresetUI();
 
-            // ✅ 불러오기 완료 메시지 표출
             if (fileName) {
                 alert(`Successfully imported '${fileName}'`);
             }
@@ -1717,7 +1734,7 @@
                     const file = await fileHandle.getFile();
                     const text = await file.text();
                     const parsed = JSON.parse(text);
-                    applyImportedPresetObject(parsed, file.name); // ✅ file.name 전달
+                    applyImportedPresetObject(parsed, file.name);
                 } catch (err) {
                     if (err.name !== 'AbortError') {
                         console.error('Import failed:', err);
@@ -1725,7 +1742,6 @@
                     }
                 }
             } else {
-                // 구형/모바일 브라우저 폴백
                 const input = document.createElement('input');
                 input.type = 'file';
                 input.accept = '.json,application/json';
@@ -1735,7 +1751,7 @@
                     try {
                         const text = await file.text();
                         const parsed = JSON.parse(text);
-                        applyImportedPresetObject(parsed, file.name); // ✅ file.name 전달
+                        applyImportedPresetObject(parsed, file.name);
                     } catch (err) {
                         alert('Failed to load the preset file.');
                     }
@@ -1743,7 +1759,7 @@
                 input.click();
             }
         });
-        // 초기 프리셋 로드 및 UI 렌더링
+
         loadPresetsFromStorage();
         renderPresetUI();
 
@@ -1825,7 +1841,6 @@
                 renderQRCode();
             }
 
-            // 🟢 Firebase 알람 이벤트 수신 (원격 컨트롤러 트리거 지원)
             currentSessionRef.child('alarmTrigger').on('value', (snap) => {
                 const triggerData = snap.val();
                 if (!triggerData || !triggerData.target) return;
@@ -2015,7 +2030,6 @@
             if (currentSessionRef) currentSessionRef.update(updates);
         }
 
-        // 🟢 원격/로컬 공용 알람 트리거 함수
         function triggerManualAlarmRemote(targetKey) {
             const targetBoxes = {
                 nbp: DOM.boxValNBP,
@@ -2036,7 +2050,6 @@
             }
         }
 
-        // 🟢 컨트롤러 라벨(수치 제목) 클릭 시 알람 트리거 리스너 등록
         document.querySelectorAll('.ctrl-title-btn').forEach(label => {
             label.addEventListener('click', (e) => {
                 e.stopPropagation();
@@ -2649,7 +2662,6 @@
         let scanX = 0; const scanSpeed = 2.5; let lastYs = { ecg: 0, spo2: 0, etco2: 0, rr: 0 };
         let lastEtco2Cycle = -1;
 
-        // Capnography Mathematical Models
         class CapnographyRenderer {
             static calculate(phase, pattern, cleftDepth, timeSec) {
                 let v = 0;
@@ -3053,6 +3065,14 @@
                 qrMinBtn.innerText = '+';
             }
         });
+
+        // 📱 모바일로 접속 시(컨트롤러 전용 모드가 아닐 때) QR 코드 창을 기본 최소화 상태로 시작 ('사진 2' 구현)
+        if (window.innerWidth <= 768 && role !== 'controller') {
+            qrBody.style.display = 'none';
+            qrResizer.style.display = 'none';
+            qrContainer.style.height = 'auto';
+            qrMinBtn.innerText = '+';
+        }
     </script>
 </body>
 </html>
